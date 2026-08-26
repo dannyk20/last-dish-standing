@@ -1,0 +1,164 @@
+/*
+ * StartScreen - START / Lobby 화면 (Game_Status: setup)
+ * 어두운 무대(Stage) 기반의 게임쇼 로비 분위기.
+ * GOLD 강조는 활성화된 시작 버튼에 집중해서 사용한다(의미 일관성 유지).
+ */
+.root {
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 48px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  min-height: 100vh;
+  justify-content: center;
+}
+
+.header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  width: clamp(220px, 46vw, 380px);
+  height: auto;
+  margin-bottom: 10px;
+  animation: logo-enter var(--transition-slow) ease-out;
+}
+
+@keyframes logo-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo {
+    animation: none;
+  }
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: clamp(18px, 3.4vw, 26px);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-red);
+  font-weight: 800;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: clamp(15px, 2vw, 18px);
+  color: var(--color-text-secondary);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sectionLabel {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.chipGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  padding: 10px 18px;
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: 15px;
+  font-weight: 600;
+  transition:
+    border-color var(--transition-fast) ease,
+    background-color var(--transition-fast) ease,
+    color var(--transition-fast) ease;
+}
+
+.chip:hover {
+  border-color: var(--color-text-secondary);
+  background-color: var(--color-surface);
+}
+
+.chipSelected {
+  border-color: var(--color-gold);
+  background-color: var(--color-surface);
+  color: var(--color-gold-highlight);
+}
+
+.chipSelected:hover {
+  border-color: var(--color-gold);
+}
+
+.regionInput {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: 15px;
+  transition: border-color var(--transition-fast) ease;
+}
+
+.regionInput::placeholder {
+  color: var(--color-eliminated);
+}
+
+.regionInput:focus {
+  outline: none;
+  border-color: var(--color-gold);
+}
+
+.startButton {
+  align-self: center;
+  margin-top: 8px;
+  min-width: 220px;
+  padding: 16px 40px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  /* 활성 상태: GOLD 강조 (Champion/Winner 의미 라인과 일관) */
+  background-color: var(--color-gold);
+  color: var(--color-stage);
+  box-shadow: 0 0 28px rgba(245, 184, 46, 0.35);
+  transition:
+    background-color var(--transition-fast) ease,
+    box-shadow var(--transition-fast) ease,
+    transform var(--transition-fast) ease;
+}
+
+.startButton:hover:not(:disabled) {
+  background-color: var(--color-gold-highlight);
+  transform: translateY(-1px);
+}
+
+.startButton:disabled {
+  /* 비활성 상태: GRAY (Disabled 의미 라인과 일관) */
+  background-color: var(--color-surface);
+  color: var(--color-eliminated);
+  box-shadow: none;
+}

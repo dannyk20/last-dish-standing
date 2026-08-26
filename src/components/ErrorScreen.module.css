@@ -1,0 +1,138 @@
+/*
+ * ErrorScreen - error 상태 표시 (Requirement 16.2, 4.3)
+ * 후보 부족(2개 미만) 또는 검색/네트워크 오류 시, 대결을 시작할 수 없다는 안내와
+ * 다른 지역/음식 종류를 선택하도록 유도한다.
+ * 어두운 무대(Stage) 테마를 유지하며, 오류 강조에 RED accent를 사용한다.
+ * 200~600ms 범위의 가벼운 진입 애니메이션만 사용한다.
+ */
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 100vh;
+  padding: 24px;
+  background-color: var(--color-stage);
+  color: var(--color-text-primary);
+  text-align: center;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid var(--color-red);
+  background-color: var(--color-card);
+  color: var(--color-red);
+  font-size: 36px;
+  line-height: 1;
+  animation: pulse-in var(--transition-slow) ease-out;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-red);
+}
+
+.message {
+  margin: 0;
+  max-width: 420px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+}
+
+.guidance {
+  margin: 0;
+  max-width: 420px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.retryButton {
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: var(--color-red);
+  color: var(--color-text-primary);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform var(--transition-fast) ease,
+    filter var(--transition-fast) ease;
+}
+
+.retryButton:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.retryButton:active {
+  transform: translateY(0);
+}
+
+.newGameButton {
+  padding: 12px 24px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast) ease,
+    color var(--transition-fast) ease;
+}
+
+.newGameButton:hover {
+  border-color: var(--color-text-secondary);
+  color: var(--color-text-primary);
+}
+
+@keyframes pulse-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 모션 최소화 선호 사용자를 위해 진입 애니메이션과 hover 이동을 비활성화한다. */
+@media (prefers-reduced-motion: reduce) {
+  .icon {
+    animation: none;
+  }
+
+  .retryButton,
+  .newGameButton {
+    transition: none;
+  }
+
+  .retryButton:hover,
+  .retryButton:active {
+    transform: none;
+  }
+}

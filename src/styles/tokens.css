@@ -1,0 +1,35 @@
+/*
+ * LAST DISH STANDING - 컬러 토큰 (design.md 컬러 시스템 표 기준)
+ * 의미 일관성:
+ *   GOLD  -> Winner / Champion / Spotlight / Win Streak / Final Winner
+ *   RED   -> VS / Battle / Elimination / Revival Round
+ *   GRAY  -> Eliminated / Disabled / Spotlight OFF
+ *   BLACK -> Stage / Background
+ */
+:root {
+  /* 배경 / Surface */
+  --color-stage: #0a0a0b; /* 전체 배경 (Stage) */
+  --color-card: #151518; /* 카드 / Surface */
+  --color-surface: #202024; /* 보조 Surface */
+  --color-border: #34343a; /* 기본 Border */
+
+  /* 텍스트 */
+  --color-text-primary: #f5f5f5; /* Primary Text */
+  --color-text-secondary: #a7a7ad; /* Secondary Text */
+
+  /* 강조색 */
+  --color-gold: #f5b82e; /* Winner / Champion */
+  --color-gold-highlight: #ffd866; /* Winner Highlight */
+  --color-red: #e53935; /* Battle / VS */
+  --color-elimination: #ff3b30; /* Elimination / Revival */
+  --color-eliminated: #5a5a61; /* Eliminated / Disabled */
+
+  /* 라운드 반경 (작거나 중간 정도만 사용) */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+
+  /* 애니메이션 지속 시간 (200ms ~ 600ms 범위) */
+  --transition-fast: 200ms;
+  --transition-base: 350ms;
+  --transition-slow: 600ms;
+}

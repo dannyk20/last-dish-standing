@@ -1,0 +1,23 @@
+/*
+ * VersusIndicator - 중앙 "VS" 표시(RED) (Requirement 19.2)
+ * RED는 VS/Battle 의미로만 사용한다.
+ */
+.root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--color-card);
+  border: 2px solid var(--color-red);
+  box-shadow: 0 0 0 4px rgba(229, 57, 53, 0.15);
+}
+
+.text {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: var(--color-red);
+  line-height: 1;
+}

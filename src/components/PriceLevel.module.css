@@ -1,0 +1,24 @@
+/*
+ * PriceLevel - 가격대 표시, 없으면 "가격 정보 없음" (Requirement 16.5)
+ */
+.root {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+}
+
+.symbolActive {
+  color: var(--color-gold);
+  font-weight: 600;
+}
+
+.symbolInactive {
+  color: var(--color-eliminated);
+}
+
+.none {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}

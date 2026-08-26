@@ -1,0 +1,206 @@
+/*
+ * Spotlight - "이 식당이 선택됐다"를 강조하는 래퍼 (Requirements 19.2, 19.3, 19.4, 19.5)
+ * on      : 선택(승자) 강조 - Gold Glow/Border + 테두리 라이트 스윕 + 전체 펄스 + SELECTED 배지
+ * off     : 미선택(패자) - 어둡게/채도 감소(Gray)로 뒤로 물러남
+ * neutral : 기본 상태
+ *
+ * 모든 연출은 2D CSS(gradient / box-shadow / filter / opacity / transform 2D)로만
+ * 구현하며 WebGL/3D 변환(perspective, translateZ, rotate3d 등)은 사용하지 않는다
+ * (Requirement 19.5). 상태 전환/등장은 200~600ms 범위의 CSS transition/animation을 쓴다.
+ */
+.root {
+  position: relative;
+  display: block;
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+  isolation: isolate;
+  transition:
+    filter var(--transition-base) ease,
+    border-color var(--transition-base) ease,
+    box-shadow var(--transition-base) ease,
+    transform var(--transition-base) ease,
+    opacity var(--transition-base) ease;
+}
+
+/*
+ * .frame = 카드 테두리를 따라 도는 골드 라이트 스윕.
+ * conic-gradient 로 만든 밝은 광선이 카드 둘레를 한 바퀴 훑고, mask 로 가운데를
+ * 도려내 "테두리 라인"만 빛나게 한다. 기본은 숨김(opacity 0), on 에서만 등장.
+ */
+.frame {
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 1;
+  background: conic-gradient(
+    from var(--sweep-angle, 0deg),
+    rgba(245, 184, 46, 0) 0deg,
+    rgba(245, 184, 46, 0) 250deg,
+    rgba(255, 216, 102, 0.9) 320deg,
+    rgba(255, 255, 255, 0.95) 340deg,
+    rgba(255, 216, 102, 0.9) 360deg
+  );
+  /* 가운데를 도려내 테두리 라인만 남긴다(2D 마스크). */
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  transition: opacity var(--transition-base) ease;
+}
+
+/* ── 선택(승자): 조명 ON ───────────────────────────────────────────── */
+.on {
+  border-color: var(--color-gold);
+  box-shadow:
+    0 0 0 2px rgba(245, 184, 46, 0.45),
+    0 0 40px 6px rgba(245, 184, 46, 0.55),
+    0 16px 48px -10px rgba(245, 184, 46, 0.4);
+  filter: brightness(1.06) saturate(1.06);
+  transform: scale(1.02);
+  /* 등장: 골드 글로우가 확 커졌다 정착(선택 임팩트). 480ms(200~600ms 범위). */
+  animation: select-pop 480ms cubic-bezier(0.18, 0.9, 0.24, 1);
+}
+
+.on .frame {
+  opacity: 1;
+  /* 테두리 광선이 한 바퀴 도는 스윕. --sweep-angle 을 회전시킨다. */
+  animation: frame-sweep 1600ms cubic-bezier(0.4, 0, 0.2, 1) 120ms infinite;
+}
+
+/* ── 미선택(패자): 조명 OFF ────────────────────────────────────────── */
+.off {
+  border-color: var(--color-eliminated);
+  filter: grayscale(0.85) brightness(0.5);
+  opacity: 0.6;
+  transform: scale(0.985);
+  animation: deselect-fade 480ms ease-out;
+}
+
+/* ── 기본 상태 ─────────────────────────────────────────────────────── */
+.neutral {
+  border-color: var(--color-border);
+}
+
+/* ── SELECTED 배지: 카드 우상단에 탁 찍히는 스탬프 ────────────────── */
+.badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--color-gold-highlight), var(--color-gold));
+  color: var(--color-stage);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  white-space: nowrap;
+  box-shadow:
+    0 4px 16px rgba(245, 184, 46, 0.45),
+    0 0 0 2px rgba(10, 10, 11, 0.25);
+  transform: rotate(6deg) scale(1);
+  transform-origin: top right;
+  /* 배지가 살짝 튀며 비스듬히 찍히는 스탬프 연출. 360ms(200~600ms 범위). */
+  animation: badge-stamp 360ms cubic-bezier(0.2, 1.5, 0.4, 1) 160ms both;
+}
+
+/* 선택 임팩트: 글로우/스케일이 확 커졌다 정착 */
+@keyframes select-pop {
+  0% {
+    box-shadow:
+      0 0 0 0 rgba(245, 184, 46, 0),
+      0 0 0 0 rgba(245, 184, 46, 0);
+    filter: brightness(1) saturate(1);
+    transform: scale(1);
+  }
+  45% {
+    box-shadow:
+      0 0 0 3px rgba(245, 184, 46, 0.6),
+      0 0 64px 16px rgba(245, 184, 46, 0.7),
+      0 18px 52px -8px rgba(245, 184, 46, 0.5);
+    filter: brightness(1.14) saturate(1.12);
+    transform: scale(1.035);
+  }
+  100% {
+    box-shadow:
+      0 0 0 2px rgba(245, 184, 46, 0.45),
+      0 0 40px 6px rgba(245, 184, 46, 0.55),
+      0 16px 48px -10px rgba(245, 184, 46, 0.4);
+    filter: brightness(1.06) saturate(1.06);
+    transform: scale(1.02);
+  }
+}
+
+/* 테두리 광선 스윕: --sweep-angle 을 0 → 360deg 회전(@property 지원 시 부드럽게) */
+@keyframes frame-sweep {
+  from {
+    --sweep-angle: 0deg;
+  }
+  to {
+    --sweep-angle: 360deg;
+  }
+}
+
+/* 배지 스탬프: 살짝 크게 나타나 비스듬히 탁 정착 */
+@keyframes badge-stamp {
+  0% {
+    opacity: 0;
+    transform: rotate(6deg) scale(1.35);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(6deg) scale(1);
+  }
+}
+
+/* 미선택: 색과 밝기가 서서히 빠지며 뒤로 물러남 */
+@keyframes deselect-fade {
+  0% {
+    filter: grayscale(0) brightness(1);
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    filter: grayscale(0.85) brightness(0.5);
+    opacity: 0.6;
+    transform: scale(0.985);
+  }
+}
+
+/*
+ * --sweep-angle 을 각도 타입으로 등록하면 conic-gradient 회전이 프레임 단위로
+ * 부드럽게 보간된다. 미지원 브라우저는 스윕 대신 정적 글로우로 자연스럽게 폴백된다.
+ */
+@property --sweep-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* 접근성: 모션 최소화 선호 시 애니메이션은 끄고 최종 상태만 표시한다. */
+@media (prefers-reduced-motion: reduce) {
+  .root,
+  .frame {
+    transition: none;
+  }
+
+  .on,
+  .off,
+  .on .frame,
+  .badge {
+    animation: none;
+  }
+
+  /* 배지는 애니메이션 없이도 보이도록 최종 상태를 명시한다. */
+  .badge {
+    opacity: 1;
+    transform: rotate(6deg) scale(1);
+  }
+}

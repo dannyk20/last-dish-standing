@@ -1,0 +1,252 @@
+/*
+ * WinnerScreen - FINAL WINNER 화면 (Requirements 14.1, 14.2, 14.3)
+ * 최종 Winner의 전체 정보 + Google Maps 링크 + 다시 시작 버튼.
+ * Winner/Champion 테마: GOLD를 최대한 활용한다.
+ */
+.screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 32px 16px 48px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-red);
+}
+
+.crown {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--color-gold);
+  text-shadow: 0 0 18px rgba(245, 184, 46, 0.5);
+}
+
+.crownIcon {
+  font-size: 28px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  padding: 20px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-card);
+  border: 2px solid var(--color-gold);
+  box-shadow: 0 0 32px rgba(245, 184, 46, 0.35);
+}
+
+.survivalTitle {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+.photo {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.name {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--color-gold-highlight);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.category {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.address {
+  color: var(--color-text-secondary);
+}
+
+.priceRating {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+}
+
+.ratingArea {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.ratingValue {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-gold);
+  letter-spacing: 0.02em;
+}
+
+.ratingCount {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.ratingNone {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.summary {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1 1 90px;
+  padding: 12px 10px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.statLabel {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+}
+
+.statValue {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-gold);
+}
+
+.mapLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-gold);
+  background-color: transparent;
+  color: var(--color-gold);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color var(--transition-fast) ease,
+    color var(--transition-fast) ease;
+}
+
+.mapLink:hover {
+  background-color: var(--color-gold);
+  color: var(--color-stage);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.primaryButton,
+.secondaryButton {
+  flex: 1 1 200px;
+  padding: 14px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: background-color var(--transition-fast) ease,
+    border-color var(--transition-fast) ease,
+    color var(--transition-fast) ease;
+}
+
+.primaryButton {
+  border: none;
+  background-color: var(--color-gold);
+  color: var(--color-stage);
+}
+
+.primaryButton:hover {
+  background-color: var(--color-gold-highlight);
+}
+
+.secondaryButton {
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+.secondaryButton:hover {
+  border-color: var(--color-text-secondary);
+}
+
+@media (max-width: 480px) {
+  .crown {
+    font-size: 22px;
+  }
+
+  .name {
+    font-size: 21px;
+  }
+}

@@ -1,0 +1,104 @@
+/*
+ * ChampionReveal - 최종 WINNER 확정 순간의 스포트라이트 연출 단계
+ * (Requirements 14.1, Spotlight/애니메이션 설계)
+ *
+ * 무대(Stage)가 어두운 상태에서 시작해 승자 위로 Gold 스포트라이트가 켜지고,
+ * 별명/식당명이 페이드 인 되는 단계적 연출.
+ * 200~600ms 범위의 가벼운 CSS transition만 사용한다(WebGL/3D 금지).
+ */
+.stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 48px 16px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-stage);
+  /* 어두운 무대: 살짝 밝기를 낮춰 스포트라이트 ON과의 대비를 준다. */
+  filter: brightness(0.7);
+  transition: filter var(--transition-slow) ease;
+}
+
+/* 스포트라이트 ON 이후 무대 밝기 회복 */
+.stageLit {
+  filter: brightness(1);
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  text-shadow: 0 0 16px rgba(245, 184, 46, 0.5);
+}
+
+.spotlightWrap {
+  width: 100%;
+  max-width: 320px;
+}
+
+.photo {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.survivalTitle {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+.name {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--color-gold-highlight);
+}
+
+/*
+ * 페이드 인 대상(eyebrow / caption)의 기본 상태는 숨김이며,
+ * .visible이 붙으면 부드럽게 등장한다.
+ */
+.eyebrow,
+.caption {
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity var(--transition-base) ease,
+    transform var(--transition-base) ease;
+}
+
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 모션 최소화 선호 사용자: 전환/이동 없이 즉시 최종 상태로 표시한다. */
+@media (prefers-reduced-motion: reduce) {
+  .stage,
+  .eyebrow,
+  .caption {
+    transition: none;
+    transform: none;
+    opacity: 1;
+    filter: brightness(1);
+  }
+}

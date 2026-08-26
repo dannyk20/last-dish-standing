@@ -1,0 +1,134 @@
+/*
+ * BattleScreen - BATTLE 화면 (Game_Status = 'playing') (Requirements 7.3, 8.1~8.4, 19.6, 19.7)
+ * 반응형 레이아웃(task 10.2):
+ *   - 모바일(기본): champion / VS / challenger 세로 배치. 최소 화면 폭 360px 지원.
+ *   - PC(>= 720px): champion | VS | challenger 좌우 배치.
+ * 모바일 우선(mobile-first)으로 작성하고 min-width 미디어 쿼리로 PC 좌우 배치를 적용한다.
+ */
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  /* 최소 폭 360px에서도 좌우 여백이 과하지 않도록 모바일 패딩을 절제한다 */
+  padding: 20px 12px;
+  box-sizing: border-box;
+}
+
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 메인으로 돌아가기: 헤더 좌측에 절제된 텍스트 버튼 */
+.quitButton {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition:
+    border-color var(--transition-fast) ease,
+    color var(--transition-fast) ease;
+}
+
+.quitButton:hover {
+  border-color: var(--color-text-secondary);
+  color: var(--color-text-primary);
+}
+
+.quitButton:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* 모바일 기본: 세로 배치 (A / VS / B) */
+.arena {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 12px;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* 세로 배치에서 카드가 화면 폭을 채우되 넘치지 않도록 한다 */
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+}
+
+.versus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+/* PC: champion | VS | challenger 좌우 배치 */
+@media (min-width: 720px) {
+  .stage {
+    padding: 32px 32px 40px;
+    gap: 28px;
+  }
+
+  .arena {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 28px;
+  }
+
+  .side {
+    flex: 1 1 0;
+    width: auto;
+    /* 카드가 넓은 화면에서 충분히 커지도록 상한을 크게 둔다 */
+    max-width: 620px;
+    gap: 16px;
+  }
+}
+
+/* 대형 화면: 좌우 여백을 더 확보하되 카드는 넉넉하게 */
+@media (min-width: 1200px) {
+  .stage {
+    padding: 40px 48px 48px;
+  }
+}
+
+.selectButton {
+  padding: 14px 20px;
+  border: 1px solid var(--color-gold);
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-gold);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast) ease,
+    color var(--transition-fast) ease;
+}
+
+.selectButton:hover {
+  background-color: var(--color-gold);
+  color: var(--color-stage);
+}
+
+.selectButton:focus-visible {
+  outline: 2px solid var(--color-gold-highlight);
+  outline-offset: 2px;
+}

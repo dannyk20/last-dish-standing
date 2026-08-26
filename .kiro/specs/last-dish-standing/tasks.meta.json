@@ -1,0 +1,731 @@
+{
+  "pbtResults": {
+    "3.6 `shuffle` 프로퍼티 테스트": {
+      "status": "passed",
+      "lastRunTimestamp": 1787723598987
+    },
+    "3.8 `calcTotalRounds` 프로퍼티 테스트": {
+      "status": "passed",
+      "lastRunTimestamp": 1787723631929
+    },
+    "3.10 `compareRatings` 프로퍼티 테스트": {
+      "status": "passed",
+      "lastRunTimestamp": 1787723648615
+    },
+    "3.13 `generateSurvivalText` 프로퍼티 테스트 + fallback 단위 테스트": {
+      "status": "passed",
+      "lastRunTimestamp": 1787723954161
+    }
+  },
+  "executionHistory": {
+    "1. 프로젝트 스캐폴딩 및 개발 환경 구성": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721383831
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721419577
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787722124529
+      }
+    ],
+    "2. 공용 타입 정의": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721384352
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787722129837
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787722582326
+      }
+    ],
+    "3.1 품질 검증 함수 `passesQualityGate` 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721384429
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787722597036
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787722989985
+      }
+    ],
+    "3.2 `passesQualityGate` 프로퍼티 테스트": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721384526
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723431110
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723671588
+      }
+    ],
+    "3.3 Roster 구성 함수 `buildRoster` 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721384592
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723008146
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723415515
+      }
+    ],
+    "3.4 `buildRoster` 프로퍼티 테스트": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721384661
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723432079
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723672766
+      }
+    ],
+    "3.5 무작위 순서 재배치 함수 `shuffle` 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721384711
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787722598670
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787722992249
+      }
+    ],
+    "3.6 `shuffle` 프로퍼티 테스트": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721384764
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723433096
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723673734
+      }
+    ],
+    "3.7 라운드 계산 함수 `calcTotalRounds` 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721384867
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723009536
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723416774
+      }
+    ],
+    "3.8 `calcTotalRounds` 프로퍼티 테스트": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721384912
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723434414
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723675073
+      }
+    ],
+    "3.9 평점 비교 함수 `compareRatings` 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721384973
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723010704
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723418292
+      }
+    ],
+    "3.10 `compareRatings` 프로퍼티 테스트": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385015
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723435810
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723676013
+      }
+    ],
+    "3.11 패자부활 트리거 평가 함수 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385071
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723012698
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723419479
+      }
+    ],
+    "3.12 규칙 기반 별명·한 줄 소개 생성기 `generateSurvivalText` 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385113
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787722600139
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787722991722
+      }
+    ],
+    "3.13 `generateSurvivalText` 프로퍼티 테스트 + fallback 단위 테스트": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385175
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723684601
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724074018
+      }
+    ],
+    "4.1 action 타입과 리듀서 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385226
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723685667
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724077857
+      }
+    ],
+    "4.2 useGame 훅 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385276
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724087926
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724333967
+      }
+    ],
+    "4.3 리듀서 프로퍼티 테스트(핵심 루프)": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385327
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724089175
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724333132
+      }
+    ],
+    "4.4 리듀서 프로퍼티 테스트(패자부활)": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385379
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724090094
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724335027
+      }
+    ],
+    "5.1 Places 서비스 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385428
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787722600892
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787722989721
+      }
+    ],
+    "5.2 정규화기 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385526
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723013976
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723420757
+      }
+    ],
+    "5.3 정규화기 단위 테스트 + API 재호출 금지 mock 테스트": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385578
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723686966
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724076378
+      }
+    ],
+    "6.1 fallback 표시 컴포넌트 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385628
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787722601731
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787722987516
+      }
+    ],
+    "6.2 인디케이터 및 Spotlight 컴포넌트 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385689
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723014084
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723421513
+      }
+    ],
+    "6.3 RestaurantCard 구현(평점 조건부 렌더링)": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385739
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787723688305
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724075423
+      }
+    ],
+    "7.1 StartScreen 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385791
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724457820
+      },
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724893351
+      }
+    ],
+    "7.2 LoadingScreen 및 ErrorScreen 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385841
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724458879
+      },
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724893010
+      }
+    ],
+    "7.3 BattleScreen 구현(평점 미표시)": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385891
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724460246
+      },
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724895132
+      }
+    ],
+    "7.4 RatingReveal 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385947
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724461215
+      },
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724895851
+      }
+    ],
+    "7.5 WinnerScreen 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721385994
+      },
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724462300
+      },
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724897234
+      }
+    ],
+    "7.6 App 상태 스위칭 및 게임 시작 파이프라인 와이어링": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721386043
+      },
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724907665
+      },
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787725319570
+      }
+    ],
+    "7.7 컴포넌트/상호작용 테스트": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721386143
+      },
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787725329770
+      },
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787726209665
+      }
+    ],
+    "8. 핵심 루프 체크포인트": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721386192
+      }
+    ],
+    "9.1 RevivalRound 화면 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721386241
+      },
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787725330003
+      },
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787726211041
+      }
+    ],
+    "9.2 ChampionReveal 연출 단계 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721386283
+      },
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787725330936
+      },
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787726211761
+      }
+    ],
+    "9.3 부활 흐름 와이어링": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721386343
+      },
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787726233118
+      },
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787726654829
+      }
+    ],
+    "10.1 Spotlight 및 상태 전환 애니메이션 적용": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721386394
+      },
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787726665412
+      },
+      {
+        "executionId": "32183254-910f-4d08-b6b1-d92bea2fb7e2",
+        "chatSessionId": "sess_4e4dcd82-cfad-41ba-98c3-05a08c1991eb",
+        "timestamp": 1787727202850
+      }
+    ],
+    "10.2 반응형 레이아웃 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721386443
+      },
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787726665989
+      },
+      {
+        "executionId": "32183254-910f-4d08-b6b1-d92bea2fb7e2",
+        "chatSessionId": "sess_4e4dcd82-cfad-41ba-98c3-05a08c1991eb",
+        "timestamp": 1787727203565
+      }
+    ],
+    "10.3 다시 시작 및 최종 fallback 마무리": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721386494
+      },
+      {
+        "executionId": "32183254-910f-4d08-b6b1-d92bea2fb7e2",
+        "chatSessionId": "sess_4e4dcd82-cfad-41ba-98c3-05a08c1991eb",
+        "timestamp": 1787727208591
+      },
+      {
+        "executionId": "32183254-910f-4d08-b6b1-d92bea2fb7e2",
+        "chatSessionId": "sess_4e4dcd82-cfad-41ba-98c3-05a08c1991eb",
+        "timestamp": 1787727498506
+      }
+    ],
+    "11. 최종 체크포인트": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787721386541
+      }
+    ],
+    "3. 게임 로직 순수 함수 구현 및 프로퍼티 테스트": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724074075
+      }
+    ],
+    "6. 공용 UI 빌딩 블록 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724075470
+      }
+    ],
+    "5. Google Places 서비스와 정규화기 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724076425
+      }
+    ],
+    "4. 게임 상태 머신(리듀서)과 useGame 훅 구현": [
+      {
+        "executionId": "906957eb-7273-41c2-a5b5-1fdef97f2a81",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787724335115
+      }
+    ],
+    "7. 핵심 화면 구현 및 App 상태 스위칭(핵심 루프 완성)": [
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787726209736
+      }
+    ],
+    "9. 패자부활전 구현(핵심 루프 이후)": [
+      {
+        "executionId": "051085bb-20f1-4e18-b6ed-2c621d39ee7f",
+        "chatSessionId": "sess_c30a4d6d-d403-4bc6-82fe-4b06f58f9afa",
+        "timestamp": 1787726654890
+      }
+    ],
+    "10. 폴리시: 애니메이션·반응형·다시 시작·fallback 마무리(핵심 루프 이후)": [
+      {
+        "executionId": "32183254-910f-4d08-b6b1-d92bea2fb7e2",
+        "chatSessionId": "sess_4e4dcd82-cfad-41ba-98c3-05a08c1991eb",
+        "timestamp": 1787727498560
+      }
+    ]
+  }
+}

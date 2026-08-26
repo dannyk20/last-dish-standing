@@ -1,0 +1,159 @@
+/*
+ * RatingReveal 화면 - 선택 후 두 식당의 평점·리뷰 수 공개 및 비교 메시지.
+ * Requirements 10.1~10.6, 16.6. CSS Modules + 컬러 토큰(tokens.css) 사용.
+ */
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+}
+
+@media (min-width: 720px) {
+  .root {
+    padding: 32px 32px 40px;
+    gap: 28px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .root {
+    padding: 40px 48px 48px;
+  }
+}
+
+/* 상단 바: 좌측 메인 복귀 버튼 + 중앙 heading */
+.topBar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.quitButton {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 700;
+  transition:
+    border-color var(--transition-fast) ease,
+    color var(--transition-fast) ease;
+}
+
+.quitButton:hover {
+  border-color: var(--color-text-secondary);
+  color: var(--color-text-primary);
+}
+
+.quitButton:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.heading {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-red);
+}
+
+/* 두 식당 카드: PC는 좌우, 모바일은 세로 배치 (Requirement 19.6, 19.7) */
+.cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  width: 100%;
+}
+
+@media (min-width: 720px) {
+  .cards {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: 28px;
+  }
+}
+
+/* 비교 메시지 박스 */
+.message {
+  width: 100%;
+  padding: 18px 20px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  text-align: center;
+}
+
+.messageTitle {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.35;
+  color: var(--color-gold);
+}
+
+.messageBody {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-text-primary);
+}
+
+/* insufficient(평점 정보 부족) 메시지는 Gold 강조 대신 중립 톤 */
+.messageMuted .messageTitle {
+  color: var(--color-text-primary);
+}
+
+.messageMuted .messageBody {
+  color: var(--color-text-secondary);
+}
+
+/* 다음 대결 CTA (Requirement 10.6)
+ * 화면 하단에 sticky로 고정하여, 리뷰가 길어 페이지가 길어져도
+ * 스크롤 없이 항상 보이도록 한다. */
+.nextButton {
+  position: sticky;
+  bottom: 16px;
+  z-index: 2;
+  min-width: 220px;
+  padding: 16px 32px;
+  border: 1px solid var(--color-red);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-red);
+  color: var(--color-text-primary);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(10, 10, 11, 0.55);
+  transition:
+    filter var(--transition-fast) ease,
+    transform var(--transition-fast) ease;
+}
+
+.nextButton:hover {
+  filter: brightness(1.1);
+}
+
+.nextButton:active {
+  transform: translateY(1px);
+}
+
+.nextButton:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
