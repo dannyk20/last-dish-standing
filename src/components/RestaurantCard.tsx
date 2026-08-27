@@ -11,8 +11,8 @@ interface RestaurantCardProps {
   restaurant: Restaurant;
   showRating: boolean;
   spotlight?: SpotlightState;
-  /** 사진 하단 썸네일 미리보기 표시 여부(기본 true). false면 내부 슬라이드만 남긴다. */
-  showPhotoThumbnails?: boolean;
+  /** true면 Google Maps 링크를 카드 하단에 표시한다(googleMapsUrl 이 있을 때만). */
+  showMapLink?: boolean;
 }
 
 /**
@@ -32,7 +32,7 @@ function RestaurantCard({
   restaurant,
   showRating,
   spotlight = 'neutral',
-  showPhotoThumbnails = true,
+  showMapLink = false,
 }: RestaurantCardProps) {
   const {
     name,
@@ -46,6 +46,7 @@ function RestaurantCard({
     reviews,
     rating,
     userRatingCount,
+    googleMapsUrl,
   } = restaurant;
 
   // 대표 리뷰: 제공된 리뷰 중 첫 번째만 사용한다(API 미제공 정보 생성 금지).
@@ -61,7 +62,6 @@ function RestaurantCard({
             photoUrl={photoUrl}
             photoUrls={photoUrls}
             alt={`${name} 대표 이미지`}
-            showThumbnails={showPhotoThumbnails}
           />
         </div>
 
@@ -102,6 +102,18 @@ function RestaurantCard({
                 </>
               )}
             </div>
+          )}
+
+          {/* Google Maps 링크(옵션): 새 탭 + rel=noopener noreferrer. */}
+          {showMapLink && googleMapsUrl && (
+            <a
+              className={styles.mapLink}
+              href={googleMapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Google Maps에서 보기
+            </a>
           )}
         </div>
       </article>

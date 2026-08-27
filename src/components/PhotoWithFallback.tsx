@@ -4,26 +4,19 @@ import styles from './PhotoWithFallback.module.css';
 interface PhotoWithFallbackProps {
   /** 대표 사진 URL(단일). photoUrls 가 있으면 그쪽이 우선한다. */
   photoUrl?: string;
-  /** 최대 5장의 사진 URL. 2장 이상이면 갤러리(캐러셀 + 썸네일)로 표시한다. */
+  /** 최대 5장의 사진 URL. 2장 이상이면 좌우 슬라이드(이전/다음)로 볼 수 있다. */
   photoUrls?: string[];
   alt: string;
-  /** 하단 썸네일 미리보기 스트립 표시 여부(기본 true). 이미지 내부 슬라이드는 유지된다. */
-  showThumbnails?: boolean;
 }
 
 /**
  * 식당 사진을 표시한다.
- * - photoUrls 가 2장 이상이면 캐러셀(이전/다음 + 썸네일)로 최대 5장을 볼 수 있다.
+ * - photoUrls 가 2장 이상이면 좌우 슬라이드(이전/다음 + 카운터)로 최대 5장을 볼 수 있다.
  * - 1장이거나 photoUrl 만 있으면 단일 이미지를 표시한다.
  * - 사진이 없거나 현재 이미지 로드에 실패하면 기본 placeholder 를 표시한다.
  * Requirement 16.3: 식당 사진이 없으면 기본 placeholder 이미지를 표시한다.
  */
-function PhotoWithFallback({
-  photoUrl,
-  photoUrls,
-  alt,
-  showThumbnails = true,
-}: PhotoWithFallbackProps) {
+function PhotoWithFallback({ photoUrl, photoUrls, alt }: PhotoWithFallbackProps) {
   // 표시 후보 목록: photoUrls 우선, 없으면 photoUrl 단일, 둘 다 없으면 빈 배열.
   const urls =
     photoUrls && photoUrls.length > 0
@@ -100,37 +93,6 @@ function PhotoWithFallback({
         )}
       </div>
 
-      {isGallery && showThumbnails && (
-        <div className={styles.thumbs} role="tablist" aria-label="사진 목록">
-          {urls.map((url, i) => (
-            <button
-              key={url}
-              type="button"
-              role="tab"
-              aria-selected={i === index}
-              aria-label={`${i + 1}번째 사진 보기`}
-              className={`${styles.thumb} ${i === index ? styles.thumbActive : ''}`}
-              onClick={() => setIndex(i)}
-            >
-              {failedUrls[url] ? (
-                <span className={styles.thumbFallback} aria-hidden="true">
-                  🍽
-                </span>
-              ) : (
-                <img
-                  className={styles.thumbImage}
-                  src={url}
-                  alt=""
-                  loading="lazy"
-                  onError={() =>
-                    setFailedUrls((prev) => ({ ...prev, [url]: true }))
-                  }
-                />
-              )}
-            </button>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

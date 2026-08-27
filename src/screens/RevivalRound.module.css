@@ -58,7 +58,8 @@
 @media (min-width: 720px) {
   .cards {
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    align-items: start;
+    /* 같은 행의 후보 카드들이 동일한 높이를 갖도록 stretch(기본). */
+    align-items: stretch;
     justify-content: center;
   }
 }
@@ -67,6 +68,12 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+/* 카드가 후보 셀(그리드 stretch)의 높이를 채워, 후보 간 카드 크기를 통일한다. */
+.candidate > :first-child {
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 /* 각 후보의 "부활" 선택 액션 (Requirement 13.5) — RED accent */

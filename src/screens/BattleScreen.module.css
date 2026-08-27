@@ -83,12 +83,25 @@
 
 /* PC: champion | VS | challenger 좌우 배치 */
 @media (min-width: 720px) {
+  /*
+   * 화면(뷰포트) 높이에 맞춰 전체를 담아, 페이지 스크롤 없이 선택 버튼이 항상 보이게 한다.
+   * 헤더는 고정 높이, 아레나가 남는 세로 공간을 모두 차지한다.
+   */
   .stage {
-    padding: 32px 32px 40px;
-    gap: 28px;
+    height: 100vh;
+    max-height: 100vh;
+    padding: 24px 32px 28px;
+    gap: 20px;
+    justify-content: flex-start;
+  }
+
+  .header {
+    flex: 0 0 auto;
   }
 
   .arena {
+    flex: 1 1 auto;
+    min-height: 0;
     flex-direction: row;
     align-items: stretch;
     gap: 28px;
@@ -100,6 +113,19 @@
     /* 카드가 넓은 화면에서 충분히 커지도록 상한을 크게 둔다 */
     max-width: 620px;
     gap: 16px;
+    /* 아레나가 준 세로 공간 안에서 카드(flex:1)+버튼(고정)을 배치한다. */
+    min-height: 0;
+  }
+
+  /* 카드: 아레나 남는 세로 공간을 채운다(양쪽 side가 같은 높이이므로 두 카드도 동일). */
+  .side > :first-child {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  /* 선택 버튼: 고정 높이로 아레나 하단에 항상 보인다. */
+  .selectButton {
+    flex: 0 0 auto;
   }
 }
 

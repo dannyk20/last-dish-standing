@@ -183,12 +183,11 @@
 .carouselViewport {
   position: relative;
   width: 100%;
-  /* 카드가 고정 높이(clamp 500~660px)이므로 3D 회전 여유를 더해 세로가 잘리지 않게 한다. */
-  height: clamp(560px, 74vh, 720px);
+  /* 카드 높이(clamp 560~720px)보다 확실히 커서 맵 링크를 포함한 카드 하단까지 잘리지
+   * 않고 클릭 가능하다. 3D 회전 여유도 포함한다. */
+  height: clamp(660px, 86vh, 860px);
   perspective: 1600px;
-  /* 좌우로 벗어나는 옆 카드만 가린다. 세로는 여유 높이 안에서 온전히 보인다. */
-  overflow-x: clip;
-  overflow-y: visible;
+  overflow: clip;
 }
 
 .carouselScene {
@@ -204,56 +203,87 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  /* 라운드(BATTLE)에서 쓰던 카드 폭 수준으로 넓힌다. */
-  width: min(560px, 86%);
+  /* 카드 폭: 과하게 넓지 않게 절제한다. */
+  width: min(400px, 82%);
+  /* 카드가 height:100% 이므로 항목에 명시적 높이를 준다(맵 링크 포함 전체가 담기도록
+   * 뷰포트보다 작게). 모든 카드가 동일 크기가 된다. */
+  height: clamp(560px, 72vh, 720px);
   transform: translate(-50%, -50%)
-    translateX(calc(var(--offset) * 66%))
-    translateZ(calc(var(--abs) * -280px))
+    translateX(calc(var(--offset) * 58%))
+    translateZ(calc(var(--abs) * -260px))
     rotateY(calc(var(--offset) * 30deg));
   opacity: calc(1 - var(--abs) * 0.42);
   transition:
     transform var(--transition-slow) cubic-bezier(0.22, 0.8, 0.24, 1),
     opacity var(--transition-slow) ease;
+  /* 기본: 좌우(비중앙) 카드는 클릭을 통과시켜 뒤의 넘김 영역(carouselZone)이 받게 한다. */
+  pointer-events: none;
+}
+
+/* 중앙(현재) 카드만 클릭/스크롤을 받는다: 이미지 슬라이드·리뷰 스크롤이 동작한다.
+ * 중앙 카드는 z-index 10 으로 넘김 영역(z-index 5)보다 위에 있어, 카드 위 클릭은
+ * 카드가 처리하고 카드 바깥 좌우 여백 클릭은 넘김 영역이 처리한다. */
+.carouselItem[aria-hidden='false'] {
+  pointer-events: auto;
+}
+
+/* 뷰포트 좌/우 절반 클릭 영역: 화살표 버튼 대신 이 영역을 눌러 카드를 넘긴다.
+ * 중앙 카드 위로 겹치지 않도록 좌우 가장자리에만 두고, 호버 시 방향 힌트(‹ ›)를 보인다. */
+.carouselZone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 30%;
+  /* 중앙 카드(z-index 10)보다 아래에 두어, 카드 위 클릭은 카드가 받고 카드 바깥
+   * 좌우 여백 클릭만 이 넘김 영역이 받도록 한다. */
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border: none;
+  background: transparent;
   cursor: pointer;
 }
 
-/* 중앙 항목은 클릭 대상이 아니며(현재 표시 중), 좌우 항목만 클릭해 이동. */
-.carouselItem[aria-hidden='false'] {
-  cursor: default;
+.carouselZoneLeft {
+  left: 0;
+  justify-content: flex-start;
 }
 
-.carouselNav {
-  display: flex;
-  align-items: center;
-  gap: 18px;
+.carouselZoneRight {
+  right: 0;
+  justify-content: flex-end;
 }
 
-.carouselNavButton {
+/* 방향 힌트 아이콘: 평소 옅게, 호버 시 뚜렷하게. */
+.carouselZoneIcon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 44px;
   height: 44px;
   border-radius: 50%;
+  background-color: rgba(10, 10, 11, 0.5);
   border: 1px solid var(--color-border);
-  background-color: var(--color-surface);
   color: var(--color-text-primary);
   font-size: 24px;
   line-height: 1;
-  cursor: pointer;
+  opacity: 0.4;
   transition:
+    opacity var(--transition-fast) ease,
     border-color var(--transition-fast) ease,
-    background-color var(--transition-fast) ease;
+    color var(--transition-fast) ease;
 }
 
-.carouselNavButton:hover {
+.carouselZone:hover .carouselZoneIcon {
+  opacity: 1;
   border-color: var(--color-gold);
   color: var(--color-gold);
 }
 
-.carouselNavButton:focus-visible {
+.carouselZone:focus-visible {
   outline: 2px solid var(--color-gold);
-  outline-offset: 2px;
+  outline-offset: -4px;
 }
 
 .carouselCounter {
@@ -265,14 +295,18 @@
   text-align: center;
 }
 
-/* "우승자 다시 확인하기": 캐러셀 영역을 침범하지 않는 적당한 크기의 pill 버튼. */
+/* "우승자 다시 확인하기": 캐러셀 영역과 확실히 분리된 pill 버튼.
+ * 상단 여백으로 캐러셀과 간격을 두고, relative + z-index 로 항상 위에 표시한다. */
 .backToWinnerButton {
   align-self: center;
+  position: relative;
+  z-index: 30;
+  margin-top: 12px;
   width: auto;
   padding: 11px 24px;
   border-radius: 999px;
   border: 1px solid var(--color-gold);
-  background-color: rgba(245, 184, 46, 0.12);
+  background-color: var(--color-card);
   color: var(--color-gold-highlight);
   font-size: 14px;
   font-weight: 700;
@@ -636,14 +670,16 @@
     max-width: 300px;
   }
 
-  /* 3D 캐러셀: 좁은 화면에서 원근을 조정하고, 카드 고정 높이에 맞춰 뷰포트 높이를 잡는다. */
+  /* 3D 캐러셀: 좁은 화면에서도 카드(맵 링크 포함)가 잘리지 않도록 뷰포트를 카드보다
+   * 크게 잡는다. */
   .carouselViewport {
-    height: clamp(480px, 70vh, 620px);
+    height: clamp(600px, 88vh, 760px);
     perspective: 1000px;
   }
 
   .carouselItem {
     width: min(320px, 88%);
+    height: clamp(500px, 74vh, 640px);
     transform: translate(-50%, -50%)
       translateX(calc(var(--offset) * 70%))
       translateZ(calc(var(--abs) * -180px))

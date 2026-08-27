@@ -5,7 +5,6 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   width: 100%;
   /* 부모(.photo 등)가 고정 높이를 주면 그 높이를 채운다. 높이가 auto 이면
    * 아래 viewport 의 aspect-ratio 로 자연 높이가 결정된다. */
@@ -37,7 +36,9 @@
 .image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  /* 원본 비율을 최대한 보존한다(잘리지 않게 contain). 비율이 다른 영역은
+   * viewport 의 어두운 배경으로 자연스럽게 채워진다(레터박스). */
+  object-fit: contain;
 }
 
 .placeholder {
@@ -118,58 +119,9 @@
   letter-spacing: 0.04em;
 }
 
-/* 썸네일 스트립 */
-.thumbs {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  padding-bottom: 2px;
-}
-
-.thumb {
-  flex: 0 0 auto;
-  width: 52px;
-  height: 40px;
-  padding: 0;
-  overflow: hidden;
-  border: 2px solid transparent;
-  border-radius: var(--radius-sm);
-  background-color: var(--color-surface);
-  opacity: 0.6;
-  transition:
-    opacity var(--transition-fast) ease,
-    border-color var(--transition-fast) ease;
-}
-
-.thumb:hover {
-  opacity: 0.9;
-}
-
-.thumbActive {
-  border-color: var(--color-gold);
-  opacity: 1;
-}
-
-.thumbImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.thumbFallback {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  font-size: 16px;
-  opacity: 0.6;
-}
-
 /* 모션 최소화 선호 사용자: 트랜지션 제거 */
 @media (prefers-reduced-motion: reduce) {
-  .navButton,
-  .thumb {
+  .navButton {
     transition: none;
   }
 }

@@ -137,14 +137,13 @@ function EliminatedCarousel({
   index,
   onPrev,
   onNext,
-  onSelectIndex,
 }: {
   items: Restaurant[];
   index: number;
   onPrev: () => void;
   onNext: () => void;
-  onSelectIndex: (i: number) => void;
 }) {
+  const multiple = items.length > 1;
   return (
     <div className={styles.carousel}>
       <div className={styles.carouselViewport}>
@@ -154,7 +153,6 @@ function EliminatedCarousel({
             const offset = i - index;
             const abs = Math.abs(offset);
             if (abs > 2) return null;
-            const isCenter = offset === 0;
             return (
               <div
                 key={r.id}
@@ -166,43 +164,49 @@ function EliminatedCarousel({
                     zIndex: 10 - abs,
                   } as React.CSSProperties
                 }
-                aria-hidden={!isCenter}
-                onClick={() => {
-                  if (!isCenter) onSelectIndex(i);
-                }}
+                aria-hidden={offset !== 0}
               >
                 {/* 게임 중 사용한 카드와 동일하게 전체 정보를 표시하고,
                     게임 중엔 감췄던 평점까지 공개한다(showRating).
-                    사진은 내부 슬라이드(좌우 넘김)만 남기고 썸네일 미리보기는 숨긴다. */}
-                <RestaurantCard restaurant={r} showRating showPhotoThumbnails={false} />
+                    탈락 식당도 위치를 확인할 수 있게 Google Maps 링크를 표시한다. */}
+                <RestaurantCard restaurant={r} showRating showMapLink />
               </div>
             );
           })}
         </div>
+
+        {/* 뷰포트 좌/우 절반 클릭 영역: 화살표 버튼 대신 이 영역을 눌러 넘긴다.
+            중앙 카드 영역과 겹치지 않도록 좌우 가장자리에만 배치한다. */}
+        {multiple && (
+          <>
+            <button
+              type="button"
+              className={`${styles.carouselZone} ${styles.carouselZoneLeft}`}
+              onClick={onPrev}
+              aria-label="이전 탈락 식당"
+            >
+              <span className={styles.carouselZoneIcon} aria-hidden="true">
+                ‹
+              </span>
+            </button>
+            <button
+              type="button"
+              className={`${styles.carouselZone} ${styles.carouselZoneRight}`}
+              onClick={onNext}
+              aria-label="다음 탈락 식당"
+            >
+              <span className={styles.carouselZoneIcon} aria-hidden="true">
+                ›
+              </span>
+            </button>
+          </>
+        )}
       </div>
 
-      {items.length > 1 && (
-        <div className={styles.carouselNav}>
-          <button
-            type="button"
-            className={styles.carouselNavButton}
-            onClick={onPrev}
-            aria-label="이전 탈락 식당"
-          >
-            ‹
-          </button>
-          <span className={styles.carouselCounter} aria-live="polite">
-            {index + 1} / {items.length}
-          </span>
-          <button
-            type="button"
-            className={styles.carouselNavButton}
-            onClick={onNext}
-            aria-label="다음 탈락 식당"
-          >
-            ›
-          </button>
-        </div>
+      {multiple && (
+        <span className={styles.carouselCounter} aria-live="polite">
+          {index + 1} / {items.length}
+        </span>
       )}
     </div>
   );
@@ -397,7 +401,6 @@ function WinnerScreen({
               index={carouselIndex}
               onPrev={goPrev}
               onNext={goNext}
-              onSelectIndex={(i) => setCarouselIndex(i)}
             />
           </div>
         )}
