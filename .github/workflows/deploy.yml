@@ -33,7 +33,12 @@ jobs:
         run: npm run build
         env:
           VITE_GOOGLE_API_KEY: ${{ secrets.VITE_GOOGLE_API_KEY }}
-
+          
+      - name: Debug OIDC claims
+        uses: github/actions-oidc-debugger@main
+        with:
+          audience: sts.amazonaws.com
+          
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
