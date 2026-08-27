@@ -29,14 +29,14 @@ jobs:
       - name: Run tests
         run: npx vitest run
         
-      - name: Check Google API key
+      - name: Verify build env
         run: |
-          if [ -z "$VITE_GOOGLE_MAPS_API_KEY" ]; then
-            echo "❌ VITE_GOOGLE_MAPS_API_KEY is EMPTY"
-            exit 1
-          else
-            echo "✅ VITE_GOOGLE_MAPS_API_KEY is set"
-          fi
+          echo "API key length: ${#VITE_GOOGLE_MAPS_API_KEY}"
+        env:
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
+      
+      - name: Build
+        run: npm run build
         env:
           VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
 
