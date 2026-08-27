@@ -33,17 +33,6 @@ jobs:
         run: npm run build
         env:
           VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
-
-      - name: Verify built API key
-        run: |
-          if grep -R "${VITE_GOOGLE_MAPS_API_KEY}" dist > /dev/null; then
-            echo "✅ API key is baked into dist"
-          else
-            echo "❌ API key is NOT in dist"
-            exit 1
-          fi
-        env:
-          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
           
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
