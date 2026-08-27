@@ -87,7 +87,7 @@ function startPlaying(state: GameState, roster: Restaurant[]): GameState {
 
 /**
  * 다음 일반 도전자로 진행하거나(nextIndex 사용) 남은 도전자가 없으면 종료한다.
- * `revival` 또는 `ratingReveal` 이후 공용으로 사용된다.
+ * `SELECT_RESTAURANT`(선택 확정) 및 `SKIP_REVIVAL` 이후 공용으로 사용된다.
  */
 function advanceToNextChallenger(state: GameState): GameState {
   if (state.nextIndex < state.rosterOrder.length) {
@@ -191,11 +191,11 @@ export function reducer(state: GameState, action: GameAction): GameState {
         round: state.currentRound,
       };
 
-      return {
+      // 승자/패자를 확정한 중간 상태. 별도 평점 공개 단계 없이 곧바로 다음 대결로
+      // 진행한다(평점/리뷰는 최종 Winner 확정 시에만 공개된다).
+      const afterBattle: GameState = {
         ...state,
-        status: 'ratingReveal',
         currentChampion: winnerId,
-        // 도전자는 평점 공개 단계에서도 참조 가능하도록 유지한다.
         currentChallenger: state.currentChallenger,
         eliminated: [...state.eliminated, loserId],
         winStreak,
@@ -203,49 +203,29 @@ export function reducer(state: GameState, action: GameAction): GameState {
         lastBattle,
         selectedId: winnerId,
       };
-    }
 
-    case 'REVEAL_NEXT': {
-      // ratingReveal 에서만 처리.
-      if (state.status !== 'ratingReveal') return state;
-
-      // 패자부활 트리거 판정.
+      // 패자부활 트리거 판정: 조건 충족 시 revival 로, 아니면 다음 도전자/종료로 분기.
       const trigger = shouldTriggerRevival({
-        rosterSize: state.rosterOrder.length,
-        revivalEligible: state.revivalEligible,
-        revivalUsed: state.revivalUsed,
-        eliminatedCount: state.eliminated.length,
+        rosterSize: afterBattle.rosterOrder.length,
+        revivalEligible: afterBattle.revivalEligible,
+        revivalUsed: afterBattle.revivalUsed,
+        eliminatedCount: afterBattle.eliminated.length,
       });
 
       if (trigger) {
-        // ratingReveal → revival. 후보 산출.
         const revivalCandidates = computeRevivalCandidates(
-          state,
+          afterBattle,
           action.shuffledEliminated,
         );
         return {
-          ...state,
+          ...afterBattle,
           status: 'revival',
           revivalCandidates,
         };
       }
 
-      // 트리거 미충족 시 다음 일반 도전자 또는 종료.
-      return advanceToNextChallenger(state);
-    }
-
-    case 'ENTER_REVIVAL': {
-      // ratingReveal → revival 명시 전이(REVEAL_NEXT 내부 분기와 동일 결과).
-      if (state.status !== 'ratingReveal') return state;
-      const revivalCandidates = computeRevivalCandidates(
-        state,
-        action.shuffledEliminated,
-      );
-      return {
-        ...state,
-        status: 'revival',
-        revivalCandidates,
-      };
+      // 트리거 미충족 시 다음 일반 도전자로 진행하거나(남으면) 현재 챔피언을 Winner로 확정.
+      return advanceToNextChallenger(afterBattle);
     }
 
     case 'REVIVE_RESTAURANT': {
@@ -273,17 +253,6 @@ export function reducer(state: GameState, action: GameAction): GameState {
       if (state.status !== 'revival') return state;
       const used: GameState = { ...state, revivalUsed: true };
       return advanceToNextChallenger(used);
-    }
-
-    case 'FINISH': {
-      // ratingReveal → finished. 현재 챔피언을 Winner로 확정.
-      if (state.status !== 'ratingReveal') return state;
-      return {
-        ...state,
-        status: 'finished',
-        currentChallenger: null,
-        revivalCandidates: [],
-      };
     }
 
     case 'RESTART_SAME': {

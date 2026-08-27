@@ -40,37 +40,19 @@ export interface LoadErrorAction {
 
 /**
  * `playing` 상태에서 식당 선택. `status !== 'playing'` 이면 무시된다(중복 클릭 가드).
- * 선택 식당=승자, 상대=탈락. `playing` → `ratingReveal`.
+ * 선택 식당=승자, 상대=탈락. 선택 즉시 다음 대결로 진행하며, 내부에서 부활
+ * 트리거/다음 도전자/종료를 분기한다(별도의 평점 공개 단계 없음).
+ * `playing` → `playing`(다음 도전자) | `revival` | `finished`.
  * _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 11.3, 11.4, 17.2_
  */
 export interface SelectRestaurantAction {
   type: 'SELECT_RESTAURANT';
   /** 사용자가 선택한(=승자) 식당 id. 챔피언 또는 도전자 중 하나여야 한다. */
   id: string;
-}
-
-/**
- * `ratingReveal`에서 다음 CTA. 내부에서 부활 트리거/다음 도전자/종료를 분기한다.
- * 부활 후보 산출 시 무작위 선택이 필요하면 셔플된 후보 id 목록을 주입할 수 있다.
- * _Requirements: 9.6, 13.1, 13.2, 13.3, 17.2, 17.3_
- */
-export interface RevealNextAction {
-  type: 'REVEAL_NEXT';
   /**
    * 부활 후보가 3개를 초과할 때 무작위 3개를 선정하기 위한, 이미 셔플된
    * 탈락 식당 id 목록(선택). 미제공 시 탈락 등록 순서 기준으로 앞에서 선정한다.
    */
-  shuffledEliminated?: string[];
-}
-
-/**
- * `REVEAL_NEXT` 내부 분기에서 부활 조건 충족 시 진입. `ratingReveal` → `revival`.
- * 탈락 식당에서 후보(최대 3개, 챔피언 제외)를 산출한다.
- * _Requirements: 13.1, 13.2, 13.3_
- */
-export interface EnterRevivalAction {
-  type: 'ENTER_REVIVAL';
-  /** 후보가 3개 초과일 때 무작위 3개 선정을 위한 셔플된 탈락 id 목록(선택). */
   shuffledEliminated?: string[];
 }
 
@@ -92,14 +74,6 @@ export interface ReviveRestaurantAction {
  */
 export interface SkipRevivalAction {
   type: 'SKIP_REVIVAL';
-}
-
-/**
- * 모든 대결 종료. `ratingReveal` → `finished`. 현재 챔피언을 Winner로 확정.
- * _Requirements: 14.1_
- */
-export interface FinishAction {
-  type: 'FINISH';
 }
 
 /**
@@ -126,11 +100,8 @@ export type GameAction =
   | LoadSuccessAction
   | LoadErrorAction
   | SelectRestaurantAction
-  | RevealNextAction
-  | EnterRevivalAction
   | ReviveRestaurantAction
   | SkipRevivalAction
-  | FinishAction
   | RestartSameAction
   | RestartNewAction;
 

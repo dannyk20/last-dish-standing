@@ -2,7 +2,7 @@
 // _Requirements: 6.2, 6.3, 2.1_
 //
 // 핵심 검증: 게임 시작 시 최초 검색(searchRestaurants/getDetails)은 수행되지만,
-// 이후 대결(SELECT_RESTAURANT) / 평점 공개(REVEAL_NEXT) / 부활 / Winner(FINISH)로
+// 이후 대결(SELECT_RESTAURANT) / 부활(SKIP_REVIVAL·REVIVE_RESTAURANT) / Winner 로
 // 진행하는 동안 Places API 가 다시 호출되지 않는다(Req 6.2, 6.3).
 //
 // 게임 상태 머신(reducer/actions)은 다른 task 에서 동시 작성 중일 수 있다.
@@ -136,8 +136,8 @@ describe('API 재호출 금지 (Req 6.2, 6.3, 2.1)', () => {
         state = reducer(state, action) as Record<string, unknown>;
       };
 
-      // 게임을 끝까지 진행: 각 라운드마다 SELECT -> REVEAL_NEXT.
-      // (부활/FINISH 분기까지 리듀서가 자체 처리하도록 둔다.)
+      // 게임을 끝까지 진행: 각 라운드마다 SELECT 하면 즉시 다음 대결/부활/종료로
+      // 전이한다(별도 평점 공개 단계 없음). 부활 분기는 건너뛰기로 이어간다.
       let guard = 0;
       while (state.status !== 'finished' && guard < 100) {
         guard += 1;
@@ -147,8 +147,6 @@ describe('API 재호출 금지 (Req 6.2, 6.3, 2.1)', () => {
           const pick = challenger ?? champion;
           if (pick) dispatch('SELECT_RESTAURANT', { restaurantId: pick, id: pick });
           else break;
-        } else if (state.status === 'ratingReveal') {
-          dispatch('REVEAL_NEXT');
         } else if (state.status === 'revival') {
           // 부활전은 건너뛰기로 진행하여 API 재호출 없이 흐름을 이어간다.
           dispatch('SKIP_REVIVAL');

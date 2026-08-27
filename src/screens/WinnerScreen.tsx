@@ -1,3 +1,4 @@
+import { useCallback, useState } from 'react';
 import type { Restaurant } from '../types';
 import PhotoWithFallback from '../components/PhotoWithFallback';
 import PriceLevel from '../components/PriceLevel';
@@ -48,6 +49,70 @@ function WinnerScreen({
     survivalSummary,
     googleMapsUrl,
   } = winner;
+
+  // 공유 상태: idle | copied(링크 복사 완료) | shared(네이티브 공유 완료) | error
+  const [shareState, setShareState] = useState<
+    'idle' | 'copied' | 'shared' | 'error'
+  >('idle');
+
+  // 공유 문구와 링크를 구성한다. Google Maps 링크가 있으면 그것을, 없으면 현재
+  // 페이지 URL을 공유 대상으로 사용한다.
+  const shareUrl =
+    googleMapsUrl ??
+    (typeof window !== 'undefined' ? window.location.href : '');
+  const shareTitle = 'LAST DISH STANDING';
+  const shareText = `오늘의 우승 식당: ${name} (${survivalTitle})`;
+
+  const handleShare = useCallback(async () => {
+    // 1) Web Share API 지원 시 네이티브 공유 시트를 연다(모바일 등).
+    if (
+      typeof navigator !== 'undefined' &&
+      typeof navigator.share === 'function'
+    ) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl || undefined,
+        });
+        setShareState('shared');
+        return;
+      } catch (err) {
+        // 사용자가 공유 시트를 취소하면 AbortError 가 발생한다. 이 경우 조용히 무시한다.
+        if (err instanceof DOMException && err.name === 'AbortError') {
+          return;
+        }
+        // 그 외 오류는 클립보드 복사로 폴백한다(아래로 진행).
+      }
+    }
+
+    // 2) 폴백: 링크를 클립보드에 복사한다.
+    const toCopy = shareUrl || `${shareText}`;
+    try {
+      if (
+        typeof navigator !== 'undefined' &&
+        navigator.clipboard &&
+        typeof navigator.clipboard.writeText === 'function'
+      ) {
+        await navigator.clipboard.writeText(toCopy);
+        setShareState('copied');
+        window.setTimeout(() => setShareState('idle'), 2000);
+        return;
+      }
+      setShareState('error');
+    } catch {
+      setShareState('error');
+    }
+  }, [shareTitle, shareText, shareUrl]);
+
+  const shareLabel =
+    shareState === 'copied'
+      ? '링크가 복사되었습니다'
+      : shareState === 'shared'
+        ? '공유되었습니다'
+        : shareState === 'error'
+          ? '복사에 실패했습니다'
+          : '결과 공유하기';
 
   return (
     <main className={styles.screen}>
@@ -123,6 +188,18 @@ function WinnerScreen({
           )}
         </div>
       </article>
+
+      <button
+        type="button"
+        className={styles.shareButton}
+        onClick={handleShare}
+        aria-live="polite"
+      >
+        <span className={styles.shareIcon} aria-hidden="true">
+          🔗
+        </span>
+        {shareLabel}
+      </button>
 
       <div className={styles.actions}>
         <button

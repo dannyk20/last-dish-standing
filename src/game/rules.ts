@@ -1,6 +1,6 @@
 // 게임 로직 순수 함수 (LAST DISH STANDING)
 // 설계 문서 "Quality Gate / Roster Builder / 라운드 계산" 섹션 기준
-import type { Restaurant, RatingComparison, RestaurantReview } from '../types';
+import type { Restaurant, RestaurantReview } from '../types';
 
 /**
  * 후보 품질 검증 (Quality_Gate).
@@ -57,31 +57,6 @@ export function buildRoster(candidates: Restaurant[]): Restaurant[] {
  */
 export function calcTotalRounds(participantCount: number): number {
   return participantCount - 1;
-}
-
-/**
- * 평점 비교 함수.
- *
- * 승패에 영향을 주지 않으며, 평점 공개 단계에서 네 가지 메시지 변형 중 하나를
- * 결정하기 위한 순수 함수이다.
- *
- * - 두 평점 중 하나 이상이 없으면 `insufficient`.
- * - 선택 식당(chosen)의 평점이 상대(other)보다 높으면 `higher`.
- * - 낮으면 `lower`.
- * - 같으면 `equal`.
- *
- * _Requirements: 10.2, 10.3, 10.4, 10.5, 10.6_
- */
-export function compareRatings(
-  chosen: Restaurant,
-  other: Restaurant,
-): RatingComparison {
-  if (chosen.rating === undefined || other.rating === undefined) {
-    return { kind: 'insufficient' };
-  }
-  if (chosen.rating > other.rating) return { kind: 'higher' };
-  if (chosen.rating < other.rating) return { kind: 'lower' };
-  return { kind: 'equal' };
 }
 
 /**

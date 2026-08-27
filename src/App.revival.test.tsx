@@ -2,8 +2,7 @@
 // _Requirements: 12.x, 13.x, 14.1, 17.4_
 //
 // 검증 목표:
-//  1) 핵심 루프가 App 상태 머신과 연결되어 START → 대결 → 평점 공개 → 최종 확정까지
-//     동작한다.
+//  1) 핵심 루프가 App 상태 머신과 연결되어 START → 대결 → 최종 확정까지 동작한다.
 //  2) 최종 확정(finished) 시 ChampionReveal 스포트라이트 연출이 먼저 표시되고,
 //     연출 완료 후 WinnerScreen 상세가 노출된다(Req 14.1).
 //  3) 다시 시작(RESTART_SAME) 후 다시 종료되면 ChampionReveal 연출이 재생된다
@@ -57,17 +56,14 @@ function startGame() {
 }
 
 /**
- * 최초 대결에서 챔피언(첫 카드)을 선택하고, 평점 공개 후 다음으로 진행한다.
- * 참가 식당이 2개이므로 이 1회 대결 후 최종 Winner 가 확정된다.
+ * 최초 대결에서 챔피언(첫 카드)을 선택한다. 별도의 평점 공개 단계가 없으므로
+ * 선택 즉시 다음 대결로 진행하며, 참가 식당이 2개이므로 이 1회 대결 후 곧바로
+ * 최종 Winner 가 확정된다.
  */
 async function playToFinish() {
   // playing 진입까지 대기: 선택 버튼(카드의 선택 UI)이 나타난다.
   const selectButtons = await screen.findAllByRole('button', { name: /선택/ });
   fireEvent.click(selectButtons[0]);
-
-  // ratingReveal: 다음 대결 CTA 를 누른다.
-  const nextButton = await screen.findByRole('button', { name: /다음/ });
-  fireEvent.click(nextButton);
 }
 
 beforeEach(() => {
@@ -80,15 +76,18 @@ describe('App finished 흐름 - ChampionReveal → WinnerScreen 통합', () => {
     startGame();
     await playToFinish();
 
-    // ChampionReveal 연출 단계: NEW CHAMPION eyebrow 가 먼저 나타난다.
-    expect(await screen.findByText('NEW CHAMPION')).toBeInTheDocument();
+    // 선택 하이라이트(약 1.2s) 후 finished → ChampionReveal 연출 단계로 전환되어
+    // NEW CHAMPION eyebrow 가 나타난다.
+    expect(
+      await screen.findByText('NEW CHAMPION', {}, { timeout: 3000 }),
+    ).toBeInTheDocument();
 
     // 연출 타이머가 끝나면 WinnerScreen(FINAL WINNER) 이 나타난다.
     await waitFor(
       () => {
         expect(screen.getByText('FINAL WINNER')).toBeInTheDocument();
       },
-      { timeout: 3000 },
+      { timeout: 5000 },
     );
   });
 
@@ -100,7 +99,7 @@ describe('App finished 흐름 - ChampionReveal → WinnerScreen 통합', () => {
     // 1차 종료: WinnerScreen 까지 도달.
     await waitFor(
       () => expect(screen.getByText('FINAL WINNER')).toBeInTheDocument(),
-      { timeout: 3000 },
+      { timeout: 5000 },
     );
 
     // 같은 조건으로 다시하기 → loading → playing 재진입.
@@ -109,10 +108,12 @@ describe('App finished 흐름 - ChampionReveal → WinnerScreen 통합', () => {
     await playToFinish();
 
     // 재종료 시 ChampionReveal 연출이 다시 재생되어야 한다.
-    expect(await screen.findByText('NEW CHAMPION')).toBeInTheDocument();
+    expect(
+      await screen.findByText('NEW CHAMPION', {}, { timeout: 3000 }),
+    ).toBeInTheDocument();
     await waitFor(
       () => expect(screen.getByText('FINAL WINNER')).toBeInTheDocument(),
-      { timeout: 3000 },
+      { timeout: 5000 },
     );
   });
 });

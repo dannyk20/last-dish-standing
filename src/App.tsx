@@ -6,13 +6,12 @@ import type { SetupInput, Restaurant } from './types';
 import { placesService } from './services/placesService';
 import { normalizePlace } from './services/normalizer';
 import type { RawPlace } from './services/placesService';
-import { passesQualityGate, buildRoster, compareRatings } from './game/rules';
+import { passesQualityGate, buildRoster } from './game/rules';
 import { generateSurvivalText } from './lib/generator';
 import { shuffle } from './lib/shuffle';
 
 import StartScreen from './screens/StartScreen';
 import BattleScreen from './screens/BattleScreen';
-import RatingReveal from './screens/RatingReveal';
 import RevivalRound from './screens/RevivalRound';
 import RevivalReveal from './screens/RevivalReveal';
 import ChampionReveal from './screens/ChampionReveal';
@@ -83,9 +82,15 @@ async function runLoadPipeline(setup: SetupInput): Promise<Restaurant[]> {
     candidates.push({ ...normalized, survivalTitle, survivalSummary });
   }
 
-  // 4) Roster 확정(중복 제거 + 최대 8개, Req 4.1/4.2/4.4) 후 등장 순서 셔플(Req 4.5).
-  const roster = buildRoster(candidates);
-  return shuffle(roster);
+  // 4) Roster 확정.
+  //    품질 통과 후보가 8개를 초과하면, 매 게임 "같은 앞 8개"만 반복 선정되지 않도록
+  //    확정 전에 후보 전체를 먼저 무작위로 섞는다. 이렇게 하면 잘려나간 후보도
+  //    다음 게임에서 선정될 기회를 갖는다(랜덤성 개선). buildRoster 가 중복 제거 후
+  //    앞에서 최대 8개를 선정하므로, 사전 셔플이 곧 무작위 표본 추출이 된다
+  //    (Req 4.1/4.2/4.4). 반환된 Roster 는 이미 셔플된 상태이므로 등장 순서도
+  //    무작위이다(Req 4.5).
+  const roster = buildRoster(shuffle(candidates));
+  return roster;
 }
 
 /**
@@ -191,18 +196,16 @@ function App() {
 
   const handleSelect = useCallback(
     (id: string) => {
-      dispatch({ type: 'SELECT_RESTAURANT', id });
+      // 선택 즉시 다음 대결로 진행한다(평점 공개 단계 없음). 부활 트리거가 걸릴 경우
+      // 후보를 무작위 3개로 선정할 수 있도록 셔플된 탈락 목록을 함께 전달한다.
+      dispatch({
+        type: 'SELECT_RESTAURANT',
+        id,
+        shuffledEliminated: shuffle(state.eliminated),
+      });
     },
-    [dispatch],
+    [dispatch, state.eliminated],
   );
-
-  const handleRevealNext = useCallback(() => {
-    // 부활 후보를 무작위 3개로 선정할 때 사용할 셔플된 탈락 목록을 함께 전달한다.
-    dispatch({
-      type: 'REVEAL_NEXT',
-      shuffledEliminated: shuffle(state.eliminated),
-    });
-  }, [dispatch, state.eliminated]);
 
   const handleRestartSame = useCallback(() => {
     // 다시 시작 시 연출 플래그를 즉시 초기화하여 다음 종료에서 재생되도록 한다.
@@ -246,29 +249,6 @@ function App() {
           round={state.currentRound}
           totalRounds={state.totalRounds}
           onSelect={handleSelect}
-          onQuit={handleRestartNew}
-        />
-      );
-    }
-
-    case 'ratingReveal': {
-      // lastBattle 의 승자/패자로 chosen/other 를 결정한다.
-      const battle = state.lastBattle;
-      const chosen =
-        battle !== null ? state.restaurantsById[battle.winnerId] : undefined;
-      const other =
-        battle !== null ? state.restaurantsById[battle.loserId] : undefined;
-
-      if (!chosen || !other) {
-        return <LoadingScreen />;
-      }
-
-      return (
-        <RatingReveal
-          chosen={chosen}
-          other={other}
-          comparison={compareRatings(chosen, other)}
-          onNext={handleRevealNext}
           onQuit={handleRestartNew}
         />
       );

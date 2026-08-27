@@ -1,7 +1,7 @@
 // Feature: last-dish-standing — BattleScreen 컴포넌트/상호작용 테스트
 // Requirements 8.2, 8.3 (선택 전 평점 미렌더링), 8.4 (선택 시 onSelect 호출)
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import BattleScreen from './BattleScreen';
 import { makeRestaurant } from '../test/fixtures';
@@ -54,7 +54,7 @@ describe('BattleScreen', () => {
     expect(screen.queryByText('★ 3.2')).toBeNull();
   });
 
-  it('챔피언 선택 버튼 클릭 시 챔피언 id로 onSelect를 호출한다 (Req 8.4)', async () => {
+  it('챔피언 선택 버튼 클릭 시 하이라이트 연출 후 챔피언 id로 onSelect를 호출한다 (Req 8.4, 9.6)', async () => {
     const user = userEvent.setup();
     const onSelect = vi.fn();
     render(
@@ -70,11 +70,14 @@ describe('BattleScreen', () => {
     const buttons = screen.getAllByRole('button', { name: '이 식당 선택' });
     await user.click(buttons[0]);
 
-    expect(onSelect).toHaveBeenCalledTimes(1);
+    // 선택 하이라이트 연출(약 1.2s)을 보여준 뒤 onSelect 가 호출된다.
+    await waitFor(() => expect(onSelect).toHaveBeenCalledTimes(1), {
+      timeout: 2500,
+    });
     expect(onSelect).toHaveBeenCalledWith('champ');
   });
 
-  it('도전자 선택 버튼 클릭 시 도전자 id로 onSelect를 호출한다 (Req 8.4)', async () => {
+  it('도전자 선택 버튼 클릭 시 하이라이트 연출 후 도전자 id로 onSelect를 호출한다 (Req 8.4, 9.6)', async () => {
     const user = userEvent.setup();
     const onSelect = vi.fn();
     render(
@@ -90,7 +93,33 @@ describe('BattleScreen', () => {
     const buttons = screen.getAllByRole('button', { name: '이 식당 선택' });
     await user.click(buttons[1]);
 
-    expect(onSelect).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(onSelect).toHaveBeenCalledTimes(1), {
+      timeout: 2500,
+    });
     expect(onSelect).toHaveBeenCalledWith('chall');
+  });
+
+  it('선택 후 추가 클릭은 무시되어 onSelect가 한 번만 호출된다 (Req 9.5)', async () => {
+    const user = userEvent.setup();
+    const onSelect = vi.fn();
+    render(
+      <BattleScreen
+        champion={champion}
+        challenger={challenger}
+        round={1}
+        totalRounds={5}
+        onSelect={onSelect}
+      />,
+    );
+
+    const buttons = screen.getAllByRole('button', { name: '이 식당 선택' });
+    // 첫 클릭 후 버튼이 비활성화되므로 두 번째 클릭은 무시된다.
+    await user.click(buttons[0]);
+    await user.click(buttons[1]);
+
+    await waitFor(() => expect(onSelect).toHaveBeenCalledTimes(1), {
+      timeout: 2500,
+    });
+    expect(onSelect).toHaveBeenCalledWith('champ');
   });
 });

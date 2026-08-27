@@ -200,6 +200,41 @@
   color: var(--color-stage);
 }
 
+.shareButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-gold);
+  background-color: rgba(245, 184, 46, 0.12);
+  color: var(--color-gold-highlight);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast) ease,
+    color var(--transition-fast) ease;
+}
+
+.shareButton:hover {
+  background-color: var(--color-gold);
+  color: var(--color-stage);
+}
+
+.shareButton:focus-visible {
+  outline: 2px solid var(--color-gold-highlight);
+  outline-offset: 2px;
+}
+
+.shareIcon {
+  font-size: 16px;
+  line-height: 1;
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;

@@ -67,10 +67,11 @@
   border: 1px solid var(--color-border);
 }
 
-/* 접시 위의 음식: 접시와 반대로 회전시켜 항상 정면을 향하게 한다 */
+/* 접시 위의 음식: 접시와 반대로 회전시켜 항상 정면을 향하게 한다.
+ * 시각적으로 정중앙보다 약간 위(top 44%)에 놓아야 접시 위에 담긴 느낌이 자연스럽다. */
 .food {
   position: absolute;
-  top: 50%;
+  top: 44%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 44px;

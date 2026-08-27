@@ -1,12 +1,21 @@
 /*
  * PriceLevel - 가격대 표시, 없으면 "가격 정보 없음" (Requirement 16.5)
+ * 심벌 영역 hover/focus 시 대략적 금액 범위 툴팁을 표시한다.
  */
 .root {
+  position: relative;
   display: inline-flex;
   align-items: baseline;
   gap: 2px;
   font-size: 15px;
   letter-spacing: 0.04em;
+  cursor: help;
+}
+
+.root:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 .symbolActive {
@@ -21,4 +30,53 @@
 .none {
   font-size: 13px;
   color: var(--color-text-secondary);
+}
+
+/* 커스텀 툴팁: 기본 숨김, hover/focus 시 심벌 위로 표시 */
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  z-index: 5;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(10, 10, 11, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity var(--transition-fast) ease,
+    transform var(--transition-fast) ease;
+}
+
+/* 툴팁 하단 화살표 */
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--color-border);
+}
+
+.root:hover .tooltip,
+.root:focus-visible .tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip {
+    transition: none;
+  }
 }

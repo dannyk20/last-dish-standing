@@ -27,7 +27,6 @@ export type GameStatus =
   | 'setup'
   | 'loading'
   | 'playing'
-  | 'ratingReveal'
   | 'revival'
   | 'finished'
   | 'error';
@@ -43,14 +42,8 @@ export interface BattleResult {
   round: number;
 }
 
-export type RatingComparison =
-  | { kind: 'higher' } // 선택 식당 평점이 더 높음 (대중 평가와 일치)
-  | { kind: 'lower' } // 선택 식당 평점이 더 낮음 (평점보다 내 취향)
-  | { kind: 'equal' } // 평점 동일
-  | { kind: 'insufficient' }; // 한쪽 이상 평점 없음
-
 export interface GameState {
-  status: GameStatus; // setup | loading | playing | ratingReveal | revival | finished | error
+  status: GameStatus; // setup | loading | playing | revival | finished | error
   setup: SetupInput; // { foodType, region }
   rosterOrder: string[]; // 확정된 참가 식당 id를 등장 순서대로 (셔플된 상태)
   restaurantsById: Record<string, Restaurant>; // 인메모리 저장소

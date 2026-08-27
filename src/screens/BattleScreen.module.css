@@ -123,7 +123,7 @@
     color var(--transition-fast) ease;
 }
 
-.selectButton:hover {
+.selectButton:hover:not(:disabled) {
   background-color: var(--color-gold);
   color: var(--color-stage);
 }
@@ -131,4 +131,15 @@
 .selectButton:focus-visible {
   outline: 2px solid var(--color-gold-highlight);
   outline-offset: 2px;
+}
+
+/* 선택 확정 후 하이라이트 연출 동안 버튼을 비활성화한다(중복 선택 방지). */
+.selectButton:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.quitButton:disabled {
+  opacity: 0.4;
+  cursor: default;
 }

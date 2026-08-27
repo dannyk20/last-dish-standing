@@ -52,8 +52,8 @@ interface PlaythroughResult {
  * 하나의 완전한 게임을 시뮬레이션한다.
  *
  * - START_GAME -> LOAD_SUCCESS(roster)로 playing에 진입한다.
- * - playing에서는 choosePreferChampion에 따라 챔피언 또는 도전자를 선택(SELECT_RESTAURANT)한다.
- * - ratingReveal에서는 REVEAL_NEXT를 dispatch한다(내부에서 revival/다음 도전자/finished 분기).
+ * - playing에서 choosePreferChampion에 따라 챔피언 또는 도전자를 선택(SELECT_RESTAURANT)하면
+ *   선택 즉시 내부에서 revival/다음 도전자/finished 분기가 일어난다(별도 평점 공개 단계 없음).
  * - revival에 진입하면 관찰을 기록한 뒤 skipRevival 여부에 따라 SKIP_REVIVAL 또는
  *   첫 후보로 REVIVE_RESTAURANT를 dispatch한다.
  * - finished에 도달하면 종료한다.
@@ -92,15 +92,23 @@ function playFullGame(
         : state.currentChallenger;
       // 방어: 둘 중 하나는 항상 존재해야 한다.
       const id = chosen ?? state.currentChampion ?? state.currentChallenger!;
-      state = reducer(state, { type: 'SELECT_RESTAURANT', id });
-      continue;
-    }
-
-    if (state.status === 'ratingReveal') {
-      // shuffledEliminated를 역순으로 주입하여 3개 초과 시 무작위 선정 경로도 태운다.
-      const shuffledEliminated = [...state.eliminated].reverse();
-      state = reducer(state, { type: 'REVEAL_NEXT', shuffledEliminated });
-      // 방금 REVEAL_NEXT로 revival에 진입했다면 관찰을 기록한다.
+      // 선택 시 곧바로 부활 트리거가 판정된다. 3개 초과 시 무작위 선정 경로도
+      // 태우기 위해, 현재 탈락 목록에 이번 패자(=선택되지 않은 쪽)를 더해 역순으로
+      // 셔플된 후보 힌트를 주입한다(리듀서가 최종 eliminated로 필터링한다).
+      const loser =
+        id === state.currentChampion
+          ? state.currentChallenger
+          : state.currentChampion;
+      const shuffledEliminated = [
+        ...(loser ? [loser] : []),
+        ...state.eliminated,
+      ].reverse();
+      state = reducer(state, {
+        type: 'SELECT_RESTAURANT',
+        id,
+        shuffledEliminated,
+      });
+      // 방금 선택으로 revival에 진입했다면 관찰을 기록한다.
       if (state.status === 'revival') {
         revivalEntries += 1;
         observations.push({

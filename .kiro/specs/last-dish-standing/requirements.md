@@ -4,7 +4,7 @@
 
 LAST DISH STANDING("Only One Restaurant Survives.")은 사용자가 지역과 음식 종류를 선택한 뒤 여러 식당을 1:1로 비교하며 자신의 취향에 맞는 최종 식당 한 곳을 선택하는 게임형 맛집 탐색 웹서비스이다. 내부 게임 용어로는 "Restaurant Survival"로 표기되며, 제품명은 LAST DISH STANDING이다.
 
-일반 맛집 검색과 달리 선택 전에는 평점을 숨겨 사진, 가격대, 대표 리뷰, 게임용 별명, 한 줄 소개를 근거로 사용자가 직접 판단하게 하고, 선택 후 두 식당의 실제 평점을 공개하여 대중적 평가와 자신의 취향을 비교하게 한다. 선택된 식당은 살아남아 새로운 도전자와 계속 경쟁하고, 마지막까지 살아남은 식당을 최종 Winner로 결정한다.
+일반 맛집 검색과 달리 대결 중에는 평점을 숨겨 사진, 가격대, 대표 리뷰, 게임용 별명, 한 줄 소개를 근거로 사용자가 직접 판단하게 한다. 평점이 선택을 편향시키지 않도록 평점과 리뷰 수는 최종 Winner가 확정된 뒤에만 공개한다. 선택된 식당은 살아남아 새로운 도전자와 계속 경쟁하고, 마지막까지 살아남은 식당을 최종 Winner로 결정한다.
 
 본 문서는 하루 안에 구현하는 단기 프로젝트의 요구사항을 정의하며, 세 개의 원본 문서(requirements.md, constraints.md, design-prompt.md)에 정의된 내용에만 근거한다. 원본에 없는 기능은 추가하지 않는다.
 
@@ -17,8 +17,7 @@ LAST DISH STANDING("Only One Restaurant Survives.")은 사용자가 지역과 �
 - **Places_Service**: Google Places API에서 식당을 검색하고 상세 정보를 확보하는 시스템 구성요소.
 - **Quality_Gate**: 검색 결과 중 게임 참가 자격을 판정하는 후보 품질 검증 구성요소.
 - **Roster**: 게임에 실제로 참가하도록 확정된 참가 식당의 집합(최소 2개, 최대 8개).
-- **Battle_Screen**: 두 식당을 1:1로 비교하고 사용자가 하나를 선택하는 대결 화면.
-- **Rating_Reveal**: 사용자가 선택한 이후 두 식당의 실제 평점과 비교 메시지를 공개하는 상태/화면.
+- **Battle_Screen**: 두 식당을 1:1로 비교하고 사용자가 하나를 선택하는 대결 화면. 선택 시 승자 카드에 하이라이트 연출을 잠시 보여준 뒤 곧바로 다음 대결로 진행한다.
 - **CHAMPION**: 현재까지 살아남은 식당(CURRENT CHAMPION). 다음 도전자와 계속 경쟁한다.
 - **CHALLENGER**: 현재 챔피언과 대결하는 새로운 도전자 식당.
 - **WIN_STREAK**: 현재 챔피언의 연속 승리 횟수. 새로운 챔피언의 연승은 1부터 시작한다.
@@ -29,7 +28,7 @@ LAST DISH STANDING("Only One Restaurant Survives.")은 사용자가 지역과 �
 - **WINNER**: 모든 대결이 종료된 후 마지막까지 살아남은 최종 식당.
 - **Rule_Based_Generator**: 규칙 기반(키워드/템플릿) 별명 및 한 줄 소개 생성 구성요소.
 - **Restaurant**: 게임에서 사용하는 식당 데이터 구조. 필드: id, name, address?, category?, photoUrl?, priceLevel?, rating?, userRatingCount?, reviews(text, rating?, authorName?), survivalTitle, survivalSummary, googleMapsUrl?.
-- **Game_Status**: 게임 상태 값 집합. `setup` | `loading` | `playing` | `ratingReveal` | `revival` | `finished` | `error`.
+- **Game_Status**: 게임 상태 값 집합. `setup` | `loading` | `playing` | `revival` | `finished` | `error`.
 
 ## Requirements
 
@@ -73,7 +72,7 @@ LAST DISH STANDING("Only One Restaurant Survives.")은 사용자가 지역과 �
 
 #### Acceptance Criteria
 
-1. WHERE 품질 조건을 만족한 식당이 8개 이상이다, THE LAST_DISH_STANDING SHALL 품질 조건을 만족한 식당 중 8개를 선정하여 Roster를 정확히 8개로 확정한다.
+1. WHERE 품질 조건을 만족한 식당이 8개 이상이다, THE LAST_DISH_STANDING SHALL 품질 조건을 만족한 식당 중 무작위로 8개를 선정하여 Roster를 정확히 8개로 확정하고, 특정 식당이 매 게임 반복 선정되지 않도록 한다.
 2. WHERE 품질 조건을 만족한 식당이 2개 이상 7개 이하이다, THE LAST_DISH_STANDING SHALL 품질 조건을 만족한 모든 식당(2개~7개)만으로 Roster를 확정하고 조건 미달 식당을 추가하지 않는다.
 3. IF 품질 조건을 만족한 식당이 2개 미만이다, THEN THE LAST_DISH_STANDING SHALL Game_Status를 `playing`으로 전환하지 않고, 확보된 식당 데이터를 유지한 상태로 다른 지역이나 음식 종류 선택을 안내하는 메시지를 표시한다.
 4. THE LAST_DISH_STANDING SHALL 동일 Place ID를 가진 식당이 Roster에 두 번 이상 포함되지 않도록 하여, Roster 내 각 Place ID가 유일하도록 한다.
@@ -99,7 +98,7 @@ LAST DISH STANDING("Only One Restaurant Survives.")은 사용자가 지역과 �
 #### Acceptance Criteria
 
 1. WHEN Roster와 별명·한 줄 소개가 생성된다, THE LAST_DISH_STANDING SHALL Restaurant 데이터를 현재 게임 세션의 클라이언트 메모리에 저장한다.
-2. WHILE 대결, 평점 공개, 패자부활전, Winner 화면이 진행되는 상태, THE Places_Service SHALL Google Places API를 다시 호출하지 않는다.
+2. WHILE 대결, 패자부활전, Winner 화면이 진행되는 상태, THE Places_Service SHALL Google Places API를 다시 호출하지 않는다.
 3. THE Places_Service SHALL 동일 Place ID에 대해 같은 정보를 반복 요청하지 않는다.
 4. WHILE 게임이 진행되는 상태, THE LAST_DISH_STANDING SHALL 메모리에 저장된 Restaurant 데이터를 재사용한다.
 
@@ -121,7 +120,7 @@ LAST DISH STANDING("Only One Restaurant Survives.")은 사용자가 지역과 �
 #### Acceptance Criteria
 
 1. WHILE 대결이 진행되는 `playing` 상태, THE Battle_Screen SHALL 두 식당의 SURVIVAL_TITLE, 대표 이미지, 식당명, 카테고리, 위치, 가격대, Survival_Summary, 대표 리뷰를 표시한다.
-2. WHILE 대결이 진행되는 `playing` 상태, THE Battle_Screen SHALL 평점, 리뷰 평균 점수, 평점 비교 결과를 표시하지 않는다.
+2. WHILE 대결이 진행되는 `playing` 상태, THE Battle_Screen SHALL 평점과 리뷰 평균 점수를 표시하지 않는다.
 3. WHILE 대결이 진행되는 `playing` 상태, THE Battle_Screen SHALL 평점 컴포넌트를 렌더링하지 않는다.
 4. THE Battle_Screen SHALL 각 식당에 대해 하나의 선택 UI를 제공한다.
 
@@ -136,20 +135,20 @@ LAST DISH STANDING("Only One Restaurant Survives.")은 사용자가 지역과 �
 3. WHEN 한 식당이 승자로 결정된다, THE LAST_DISH_STANDING SHALL 대결에 참여한 다른 한 식당을 탈락(ELIMINATION) 상태로 처리한다.
 4. THE LAST_DISH_STANDING SHALL 한 대결에서 사용자 선택을 정확히 한 번만 처리하고, 시스템이 승자를 자동으로 선택하거나 최종 식당을 자동 추천하지 않는다.
 5. IF 한 대결에서 이미 선택이 한 번 처리된 이후 추가 선택 입력이 발생한다, THEN THE LAST_DISH_STANDING SHALL 해당 추가 입력을 무시하고 최초로 처리된 선택 결과를 변경하지 않는다.
-6. WHEN 대결에서 선택이 처리된다, THE LAST_DISH_STANDING SHALL 다음 대결로 이동하지 않고 먼저 ratingReveal 상태로 전환한다.
+6. WHEN 대결에서 선택이 처리된다, THE Battle_Screen SHALL 승자 카드에 하이라이트 연출(Spotlight ON)을 잠시 표시한 뒤, THE LAST_DISH_STANDING SHALL 별도의 평점 공개 단계 없이 곧바로 다음 진행(다음 대결, 패자부활전, 또는 최종 Winner 확정)으로 전환한다.
 
-### Requirement 10: 선택 후 평점 공개 및 비교 메시지
+### Requirement 10: 평점 비공개 정책 및 최종 공개
 
-**User Story:** 사용자로서 나는 선택 후 평점을 확인하고 싶다, 그래야 내 취향과 대중 평가를 비교할 수 있다.
+**User Story:** 사용자로서 나는 대결 중에는 평점에 영향을 받지 않고 순수하게 내 취향으로 선택하고 싶다, 그래야 대중 평가 편향 없이 판단할 수 있다.
 
 #### Acceptance Criteria
 
-1. WHEN 사용자가 대결에서 식당을 선택한다, THE Rating_Reveal SHALL 대결에 참여한 두 식당의 실제 평점과 각 식당의 리뷰 수를 동시에 공개한다.
-2. IF 두 식당의 평점이 모두 존재하고 선택 식당의 평점이 상대 식당보다 높다, THEN THE Rating_Reveal SHALL 대중적 평가와 사용자의 선택이 일치했음을 나타내는 메시지를 표시한다.
-3. IF 두 식당의 평점이 모두 존재하고 선택 식당의 평점이 상대 식당보다 낮다, THEN THE Rating_Reveal SHALL 평점보다 사용자의 취향이 선택 식당이었음을 나타내는 메시지를 표시한다.
-4. IF 두 식당의 평점이 모두 존재하고 서로 동일하다, THEN THE Rating_Reveal SHALL 평점은 같지만 사용자의 선택은 해당 식당이었음을 나타내는 메시지를 표시한다.
-5. IF 두 식당 중 하나 이상의 평점 값이 존재하지 않는다, THEN THE Rating_Reveal SHALL 평점 비교 정보가 부족함을 나타내는 메시지를 표시하고 사용자의 선택을 기준으로 대결 결과를 유지한다.
-6. THE Rating_Reveal SHALL 평점 비교 결과가 승자 결정에 영향을 주지 않도록 하고, 다음 대결로 이동하는 CTA를 제공한다.
+1. WHILE 대결(`playing`)과 패자부활전(`revival`)이 진행되는 상태, THE LAST_DISH_STANDING SHALL 어떤 식당의 평점과 리뷰 수도 화면에 표시하지 않는다.
+2. THE LAST_DISH_STANDING SHALL 선택 직후 두 식당의 평점을 나란히 공개하는 별도의 평점 공개 단계(과거 Rating_Reveal)를 제공하지 않는다.
+3. WHEN 대결에서 선택이 처리된다, THE LAST_DISH_STANDING SHALL 평점 비교나 비교 메시지 없이 사용자의 선택만으로 승자를 확정한다.
+4. WHEN 최종 Winner가 확정된다(`finished`), THE WinnerScreen SHALL 해당 Winner의 실제 평점과 리뷰 수를 공개한다.
+5. IF Winner의 평점 값이 존재하지 않는다, THEN THE WinnerScreen SHALL "평점 정보 없음"을 표시한다.
+6. THE LAST_DISH_STANDING SHALL 평점이 대결의 승자 결정에 어떠한 영향도 주지 않도록 한다.
 
 ### Requirement 11: Survival 진행 및 챔피언 연승
 
@@ -201,6 +200,7 @@ LAST DISH STANDING("Only One Restaurant Survives.")은 사용자가 지역과 �
 1. WHEN 모든 일반 도전자와 필요한 패자부활 대결이 종료된다, THE LAST_DISH_STANDING SHALL 현재 CHAMPION을 WINNER로 결정하고 상태를 `finished`로 전환한다.
 2. THE WinnerScreen SHALL WINNER의 대표 사진, SURVIVAL_TITLE, 식당명, 카테고리, 위치, 평점, 리뷰 수, 가격대, 한 줄 소개, WIN_STREAK, 승리 횟수, 전체 대결 라운드를 표시한다.
 3. THE WinnerScreen SHALL WINNER의 Google Maps 링크를 제공한다.
+4. THE WinnerScreen SHALL 결과 공유 기능을 제공한다: Web Share API를 지원하는 환경에서는 네이티브 공유를 사용하고, 지원하지 않는 환경에서는 공유 링크를 클립보드에 복사하는 방식으로 폴백한다.
 
 ### Requirement 15: 다시 시작
 
@@ -231,9 +231,9 @@ LAST DISH STANDING("Only One Restaurant Survives.")은 사용자가 지역과 �
 
 #### Acceptance Criteria
 
-1. THE LAST_DISH_STANDING SHALL Game_Status를 `setup`, `loading`, `playing`, `ratingReveal`, `revival`, `finished`, `error` 값으로 관리한다.
-2. WHEN 사용자가 `playing` 상태에서 식당을 선택한다, THE LAST_DISH_STANDING SHALL 상태를 `ratingReveal`로 전환하고, 다음 대결 진행 시 다시 `playing`으로 전환한다.
-3. WHERE 패자부활전 실행 시점이다, THE LAST_DISH_STANDING SHALL `ratingReveal`에서 `revival`로 전환한 뒤 `playing`으로 전환한다.
+1. THE LAST_DISH_STANDING SHALL Game_Status를 `setup`, `loading`, `playing`, `revival`, `finished`, `error` 값으로 관리한다.
+2. WHEN 사용자가 `playing` 상태에서 식당을 선택한다, THE LAST_DISH_STANDING SHALL 별도의 중간 상태 없이 곧바로 다음 진행을 결정하여, 남은 도전자가 있으면 `playing`(다음 대결)으로, 패자부활전 실행 시점이면 `revival`로, 모든 대결이 끝났으면 `finished`로 전환한다.
+3. WHERE 패자부활전 실행 시점이다, THE LAST_DISH_STANDING SHALL `playing`에서의 선택 처리 결과로 `revival`로 전환한 뒤, 부활 또는 건너뛰기 이후 다시 `playing`(또는 `finished`)으로 전환한다.
 4. THE LAST_DISH_STANDING SHALL 게임 상태를 현재 클라이언트 세션에서 React 기본 상태 관리 기능으로 관리하고, 별도의 전역 상태 관리 라이브러리나 백엔드/데이터베이스를 필수로 사용하지 않는다.
 
 ### Requirement 18: API Key 보안
@@ -255,7 +255,7 @@ LAST DISH STANDING("Only One Restaurant Survives.")은 사용자가 지역과 �
 1. THE LAST_DISH_STANDING SHALL 어두운 무대(BLACK 배경) 기반의 시네마틱한 게임쇼 분위기로 화면을 구성하고, 파스텔·밝은 전체 배경·배달 앱·일반 맛집 검색·과도한 Glassmorphism 스타일을 사용하지 않는다.
 2. THE LAST_DISH_STANDING SHALL 컬러 의미를 일관되게 유지한다: GOLD는 Winner/Champion/WIN_STREAK, RED는 VS/Battle/Elimination/Revival, GRAY는 Eliminated.
 3. WHEN 사용자가 식당을 선택한다, THE LAST_DISH_STANDING SHALL 승자 카드에 Spotlight ON(Gold Border/Glow)을, 패자 카드에 Spotlight OFF(어둡게/채도 감소)를 적용한다.
-4. THE LAST_DISH_STANDING SHALL START, BATTLE, RATING REVEAL, NEW CHAMPION, NEXT CHALLENGER, ELIMINATION, REVIVAL ROUND, REVIVED CHALLENGER, FINAL WINNER 화면 상태를 제공하고, 재사용 가능한 컴포넌트(StartScreen, BattleScreen, RestaurantCard, RoundIndicator, VersusIndicator, Spotlight, RatingReveal, ChampionReveal, RevivalRound, WinnerScreen)로 구성한다.
+4. THE LAST_DISH_STANDING SHALL START, BATTLE, NEW CHAMPION, NEXT CHALLENGER, ELIMINATION, REVIVAL ROUND, REVIVED CHALLENGER, FINAL WINNER 화면 상태를 제공하고, 재사용 가능한 컴포넌트(StartScreen, BattleScreen, RestaurantCard, RoundIndicator, VersusIndicator, Spotlight, ChampionReveal, RevivalRound, RevivalReveal, WinnerScreen)로 구성한다.
 5. THE LAST_DISH_STANDING SHALL 상태 변화 연출에 200ms에서 600ms 범위의 가벼운 CSS transition/animation만 사용하고 WebGL이나 3D 효과를 사용하지 않는다.
 6. WHERE PC 환경이다, THE Battle_Screen SHALL 두 식당을 좌우로 배치한다.
 7. WHERE 모바일 환경이다, THE Battle_Screen SHALL 두 식당을 세로로 배치할 수 있으며 최소 화면 폭 360px를 지원한다.
@@ -279,7 +279,7 @@ LAST DISH STANDING("Only One Restaurant Survives.")은 사용자가 지역과 �
 
 1. THE LAST_DISH_STANDING SHALL 지역 지정, 음식 종류 선택, Google Places API 실제 검색, 품질 조건(2개 이상) 통과 식당만 후보 사용, 최대 8개·최소 2개 참가, 2개 미만 시 시작 불가를 만족한다.
 2. THE LAST_DISH_STANDING SHALL 실제 참가자 수에 따른 동적 라운드 결정, 라운드 수 비하드코딩, 식당별 별명과 한 줄 소개 표시, 두 식당 비교, 선택 전 평점 미표시, 사진·가격대·대표 리뷰 제공을 만족한다.
-3. THE LAST_DISH_STANDING SHALL 단일 식당 선택, 중복 선택 방지, 선택 후 평점 공개, 평점 비교 메시지, 평점과 무관한 사용자 선택 승리, 승자의 연속 도전을 만족한다.
+3. THE LAST_DISH_STANDING SHALL 단일 식당 선택, 중복 선택 방지, 대결·부활 중 평점 비공개, 평점과 무관한 사용자 선택 승리, 승자의 연속 도전, 최종 Winner 확정 시에만 평점 공개를 만족한다.
 4. THE LAST_DISH_STANDING SHALL 참가 6개 이상 시 패자부활전 1회 제공, 2~5개 시 미제공, 패자부활전 건너뛰기, 마지막 생존 식당 Winner 결정, Winner 전체 정보와 Google Maps 링크 제공을 만족한다.
 5. THE LAST_DISH_STANDING SHALL API 데이터 일부 누락 시 적절한 fallback 표시, 모바일과 PC에서 핵심 기능 사용 가능을 만족한다.
-6. WHERE 구현 시간이 부족하다, THE LAST_DISH_STANDING SHALL 패자부활전과 애니메이션보다 핵심 게임 루프(지역·음식 선택 → 검색 → 품질 검증 → 참가자 결정 → 별명·소개 생성 → 메모리 저장 → 1:1 대결 → 선택 → 평점 공개 → 승자 생존·다음 도전자 → 동적 라운드 → Winner)를 우선 완성한다.
+6. WHERE 구현 시간이 부족하다, THE LAST_DISH_STANDING SHALL 패자부활전과 애니메이션보다 핵심 게임 루프(지역·음식 선택 → 검색 → 품질 검증 → 참가자 결정 → 별명·소개 생성 → 메모리 저장 → 1:1 대결 → 선택 → 승자 생존·다음 도전자 → 동적 라운드 → Winner)를 우선 완성한다.

@@ -37,3 +37,13 @@
   color: var(--color-text-primary);
   line-height: 1;
 }
+
+/* 마지막 라운드: 골드로 강조하는 최종 라운드 라벨 */
+.finalLabel {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  text-shadow: 0 0 16px rgba(245, 184, 46, 0.4);
+}
