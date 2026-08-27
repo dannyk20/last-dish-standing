@@ -27,13 +27,13 @@ jobs:
         run: npm ci
 
       - name: Run tests
-        run: npm test -- --run
-
+        run: npx vitest run
+      
       - name: Build
         run: npm run build
         env:
-          VITE_GOOGLE_API_KEY: ${{ secrets.VITE_GOOGLE_API_KEY }}
-
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
+          
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
