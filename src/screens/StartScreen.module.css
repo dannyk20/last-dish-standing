@@ -15,17 +15,42 @@
 }
 
 .header {
+  position: relative;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
+  padding: 8px 0 4px;
+}
+
+/* 무대 조명 글로우: 로고 뒤에서 골드빛이 위에서 아래로 은은하게 퍼진다.
+ * 2D radial-gradient 만 사용하며 콘텐츠 뒤(z-index 0)에 깔린다. */
+.spotlightGlow {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(680px, 120%);
+  height: 320px;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 60% 60% at 50% 30%,
+    rgba(245, 184, 46, 0.22) 0%,
+    rgba(245, 184, 46, 0.08) 38%,
+    rgba(245, 184, 46, 0) 70%
+  );
+  filter: blur(4px);
+  animation: glow-breathe 5200ms ease-in-out infinite;
 }
 
 .logo {
+  position: relative;
+  z-index: 1;
   width: clamp(220px, 46vw, 380px);
   height: auto;
-  margin-bottom: 10px;
+  margin-bottom: 4px;
   animation: logo-enter var(--transition-slow) ease-out;
 }
 
@@ -46,16 +71,67 @@
   }
 }
 
-.eyebrow {
+/* 태그라인: 양옆 구분선으로 감싼 무대 라벨. RED accent(Battle/VS 라인)로 강조. */
+.tagline {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
   margin: 0;
-  font-size: clamp(18px, 3.4vw, 26px);
+  width: 100%;
+}
+
+.taglineText {
+  font-size: clamp(16px, 3vw, 24px);
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-red);
   font-weight: 800;
+  text-shadow: 0 0 18px rgba(229, 57, 53, 0.35);
+  white-space: nowrap;
+}
+
+/* 태그라인 양옆으로 뻗는 가느다란 골드 구분선(가운데 텍스트 쪽이 밝다). */
+.taglineRule {
+  flex: 1 1 0;
+  max-width: 88px;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    rgba(245, 184, 46, 0),
+    rgba(245, 184, 46, 0.6)
+  );
+}
+
+.taglineRule:last-child {
+  background: linear-gradient(
+    to left,
+    rgba(245, 184, 46, 0),
+    rgba(245, 184, 46, 0.6)
+  );
+}
+
+@keyframes glow-breathe {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlightGlow {
+    animation: none;
+  }
 }
 
 .subtitle {
+  position: relative;
+  z-index: 1;
   margin: 0;
   font-size: clamp(15px, 2vw, 18px);
   color: var(--color-text-secondary);
@@ -161,4 +237,29 @@
   background-color: var(--color-surface);
   color: var(--color-eliminated);
   box-shadow: none;
+}
+
+/* 좁은 모바일(<=480px): 세로 여백/간격을 줄여 로비가 화면에 잘 담기게 한다.
+ * 시작 버튼은 터치 영역을 위해 전체 폭으로 넓힌다. */
+@media (max-width: 480px) {
+  .root {
+    padding: 32px 18px 40px;
+    gap: 28px;
+  }
+
+  .startButton {
+    align-self: stretch;
+    width: 100%;
+    padding: 16px 24px;
+    font-size: 17px;
+  }
+
+  /* 좁은 화면: 태그라인 구분선을 짧게 하여 텍스트가 줄바꿈되지 않게 한다. */
+  .tagline {
+    gap: 10px;
+  }
+
+  .taglineRule {
+    max-width: 40px;
+  }
 }

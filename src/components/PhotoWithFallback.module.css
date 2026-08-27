@@ -7,16 +7,31 @@
   flex-direction: column;
   gap: 8px;
   width: 100%;
+  /* 부모(.photo 등)가 고정 높이를 주면 그 높이를 채운다. 높이가 auto 이면
+   * 아래 viewport 의 aspect-ratio 로 자연 높이가 결정된다. */
+  height: 100%;
 }
 
 .viewport {
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;
+  /* 부모가 고정 높이를 준 경우: viewport 가 남는 세로 공간을 채우도록 늘어난다
+   * (aspect-ratio 는 부모 높이 제약이 있으면 무시된다). */
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: hidden;
   border-radius: var(--radius-md);
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
+}
+
+/* 좁은 모바일(세로 배치): 사진 높이를 낮춰 두 카드가 한 화면에 더 잘 들어오게 한다.
+ * PC 좌우 배치(720px+)에는 영향을 주지 않는다. */
+@media (max-width: 480px) {
+  .viewport {
+    aspect-ratio: 16 / 10;
+  }
 }
 
 .image {

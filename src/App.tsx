@@ -9,6 +9,7 @@ import type { RawPlace } from './services/placesService';
 import { passesQualityGate, buildRoster } from './game/rules';
 import { generateSurvivalText } from './lib/generator';
 import { shuffle } from './lib/shuffle';
+import { playSound, primeAudio } from './lib/sound';
 
 import StartScreen from './screens/StartScreen';
 import BattleScreen from './screens/BattleScreen';
@@ -189,6 +190,9 @@ function App() {
 
   const handleStart = useCallback(
     (setup: SetupInput) => {
+      // 첫 사용자 제스처(START 클릭)에서 오디오 컨텍스트를 미리 준비해 두면
+      // 이후 효과음이 자동재생 정책에 막히지 않고 지연 없이 재생된다.
+      primeAudio();
       dispatch({ type: 'START_GAME', setup });
     },
     [dispatch],
@@ -196,8 +200,9 @@ function App() {
 
   const handleSelect = useCallback(
     (id: string) => {
-      // 선택 즉시 다음 대결로 진행한다(평점 공개 단계 없음). 부활 트리거가 걸릴 경우
-      // 후보를 무작위 3개로 선정할 수 있도록 셔플된 탈락 목록을 함께 전달한다.
+      // 선택 효과음은 BattleScreen 에서 클릭 즉시 재생한다(타이밍을 앞당기기 위함).
+      // 여기서는 선택 결과만 dispatch 한다. 부활 트리거가 걸릴 경우 후보를 무작위
+      // 3개로 선정할 수 있도록 셔플된 탈락 목록을 함께 전달한다.
       dispatch({
         type: 'SELECT_RESTAURANT',
         id,
@@ -206,6 +211,13 @@ function App() {
     },
     [dispatch, state.eliminated],
   );
+
+  // 패자부활전에서 후보를 부활 선택했을 때: 부활 효과음('revive', 중간 강도)을
+  // 재생하고 연출을 시작한다.
+  const handleRevive = useCallback((id: string) => {
+    playSound('revive');
+    setPendingRevivalId(id);
+  }, []);
 
   const handleRestartSame = useCallback(() => {
     // 다시 시작 시 연출 플래그를 즉시 초기화하여 다음 종료에서 재생되도록 한다.
@@ -281,7 +293,7 @@ function App() {
       return (
         <RevivalRound
           candidates={candidates}
-          onRevive={(id) => setPendingRevivalId(id)}
+          onRevive={handleRevive}
           onSkip={() => dispatch({ type: 'SKIP_REVIVAL' })}
         />
       );
@@ -309,9 +321,16 @@ function App() {
         );
       }
 
+      // 탈락한 식당 목록(등장/탈락 순서 유지). 후면 캐러셀에서 확인할 수 있다.
+      // 저장소에 없는 id 는 방어적으로 제외한다.
+      const eliminatedRestaurants = state.eliminated
+        .map((id) => state.restaurantsById[id])
+        .filter((r): r is Restaurant => Boolean(r));
+
       return (
         <WinnerScreen
           winner={winner}
+          eliminated={eliminatedRestaurants}
           winStreak={state.winStreak}
           winCount={state.winCount}
           totalRounds={state.totalRounds}

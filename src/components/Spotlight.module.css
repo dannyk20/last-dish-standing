@@ -184,6 +184,16 @@
   initial-value: 0deg;
 }
 
+/* 좁은 모바일: 배지를 살짝 줄여 작은 카드에서 과해 보이지 않게 한다. */
+@media (max-width: 480px) {
+  .badge {
+    top: 8px;
+    right: 8px;
+    padding: 5px 11px;
+    font-size: 10px;
+  }
+}
+
 /* 접근성: 모션 최소화 선호 시 애니메이션은 끄고 최종 상태만 표시한다. */
 @media (prefers-reduced-motion: reduce) {
   .root,

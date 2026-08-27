@@ -11,6 +11,300 @@
   max-width: 560px;
   margin: 0 auto;
   padding: 32px 16px 48px;
+  transition: max-width var(--transition-base) ease;
+}
+
+/* 후면(탈락 식당 캐러셀) 모드: 캐러셀이 화면 전체 폭에 준하게 넓게 보이도록 한다. */
+.screenBack {
+  max-width: 1400px;
+}
+
+/* ── 3D 무대: 전면 우승자 + 후면 탈락 식당 레이어 ─────────────────── */
+.stage3d {
+  position: relative;
+  width: 100%;
+  /* 우승자 카드 + 좌우 부채꼴 탈락자 배경을 담을 무대 높이 확보. */
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── 후면 배경: 우승자 좌우 뒤편에 부채꼴로 음영진 탈락자들 ──────── */
+/* 전체를 채우는 클릭 버튼. 호버 시 카드들이 살짝 앞으로 나와 전환을 암시한다. */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* 부채꼴 탈락자 카드: --slot(음수=좌, 양수=우)에 따라 좌우로 펼쳐진다.
+ * 우승자에서 멀수록(|slot| 큼) 더 벌어지고, 어둡고 작아져 원근감을 준다. */
+.backdropCard {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 300px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  /* 슬롯당 수평 간격(약 130px), 바깥일수록 아래로 조금 내리고 축소·감광. */
+  transform: translate(-50%, -50%)
+    translateX(calc(var(--slot) * 130px))
+    translateY(calc(var(--abs) * 8px))
+    scale(calc(1 - var(--abs) * 0.06));
+  filter: brightness(calc(1 - var(--abs) * 0.16));
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+  transition:
+    transform var(--transition-base) cubic-bezier(0.22, 0.8, 0.24, 1),
+    filter var(--transition-base) ease;
+}
+
+/* 호버: 카드들이 살짝 더 벌어지고 밝아지며 앞으로 나오는 듯한 소폭 애니메이션. */
+.backdrop:hover .backdropCard {
+  transform: translate(-50%, -50%)
+    translateX(calc(var(--slot) * 150px))
+    translateY(calc(var(--abs) * 4px))
+    scale(calc(1 - var(--abs) * 0.05));
+  filter: brightness(calc(1 - var(--abs) * 0.1));
+}
+
+.backdropImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.backdropFallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 40px;
+  opacity: 0.6;
+}
+
+/* 배경 클릭 힌트: 무대 하단 중앙에 표시. */
+.backdropHint {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  padding: 6px 14px;
+  border-radius: 999px;
+  background-color: rgba(10, 10, 11, 0.6);
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  transition: color var(--transition-fast) ease;
+}
+
+.backdrop:hover .backdropHint {
+  color: var(--color-gold-highlight);
+}
+
+/* ── 우승자 전면 레이어 ──────────────────────────────────────────── */
+.winnerLayer {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 420px;
+  /* 배경(부채꼴 탈락자)을 클릭할 수 있도록, 우승자 카드 자체만 이벤트를 받는다. */
+  pointer-events: none;
+  transition:
+    transform var(--transition-slow) cubic-bezier(0.22, 0.8, 0.24, 1),
+    opacity var(--transition-slow) ease;
+}
+
+.winnerLayer > * {
+  pointer-events: auto;
+}
+
+/* 전면: 우승자가 중앙 전면에 보인다. */
+.winnerLayer[data-active='true'] {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* 후면 모드: 우승자가 위로 올라가며 사라진다.
+ * 애니메이션이 끝난 뒤에는 흐름에서 제거되어 캐러셀이 정확히 중앙에 오도록 한다
+ * (position:absolute 로 빼서 flex 중앙 정렬을 캐러셀 기준으로 맞춘다). */
+.winnerLayer[data-active='false'] {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(-120%) scale(0.9);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 후면 모드: 캐러셀 레이어가 전면 중앙에 온다. */
+.carouselLayer {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  animation: carousel-in var(--transition-slow) ease-out;
+}
+
+@keyframes carousel-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── 탈락 식당 3D 캐러셀 ─────────────────────────────────────────── */
+.carousel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.carouselViewport {
+  position: relative;
+  width: 100%;
+  /* 카드가 고정 높이(clamp 500~660px)이므로 3D 회전 여유를 더해 세로가 잘리지 않게 한다. */
+  height: clamp(560px, 74vh, 720px);
+  perspective: 1600px;
+  /* 좌우로 벗어나는 옆 카드만 가린다. 세로는 여유 높이 안에서 온전히 보인다. */
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+.carouselScene {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+/* 각 항목: 현재(offset 0)는 중앙 전면, 좌우는 회전+후퇴로 심도감.
+ * rotateY 부호를 양수로 하여 좌우 카드가 바깥을 향하는 "볼록한" 배치로 만든다.
+ * 카드가 커졌으므로 좌우 간격/후퇴를 늘려 중앙 카드를 가리지 않게 한다. */
+.carouselItem {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* 라운드(BATTLE)에서 쓰던 카드 폭 수준으로 넓힌다. */
+  width: min(560px, 86%);
+  transform: translate(-50%, -50%)
+    translateX(calc(var(--offset) * 66%))
+    translateZ(calc(var(--abs) * -280px))
+    rotateY(calc(var(--offset) * 30deg));
+  opacity: calc(1 - var(--abs) * 0.42);
+  transition:
+    transform var(--transition-slow) cubic-bezier(0.22, 0.8, 0.24, 1),
+    opacity var(--transition-slow) ease;
+  cursor: pointer;
+}
+
+/* 중앙 항목은 클릭 대상이 아니며(현재 표시 중), 좌우 항목만 클릭해 이동. */
+.carouselItem[aria-hidden='false'] {
+  cursor: default;
+}
+
+.carouselNav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.carouselNavButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast) ease,
+    background-color var(--transition-fast) ease;
+}
+
+.carouselNavButton:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.carouselNavButton:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.carouselCounter {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+  min-width: 64px;
+  text-align: center;
+}
+
+/* "우승자 다시 확인하기": 캐러셀 영역을 침범하지 않는 적당한 크기의 pill 버튼. */
+.backToWinnerButton {
+  align-self: center;
+  width: auto;
+  padding: 11px 24px;
+  border-radius: 999px;
+  border: 1px solid var(--color-gold);
+  background-color: rgba(245, 184, 46, 0.12);
+  color: var(--color-gold-highlight);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast) ease,
+    color var(--transition-fast) ease;
+}
+
+.backToWinnerButton:hover {
+  background-color: var(--color-gold);
+  color: var(--color-stage);
+}
+
+.backToWinnerButton:focus-visible {
+  outline: 2px solid var(--color-gold-highlight);
+  outline-offset: 2px;
+}
+
+/* 모션 최소화 선호: 3D 전환/캐러셀 애니메이션을 즉시 전환으로 대체한다. */
+@media (prefers-reduced-motion: reduce) {
+  .winnerLayer,
+  .backdropCard,
+  .carouselItem {
+    transition: none;
+    animation: none;
+  }
+
+  .carouselLayer {
+    animation: none;
+  }
 }
 
 .header {
@@ -277,11 +571,82 @@
 }
 
 @media (max-width: 480px) {
+  .screen {
+    padding: 24px 14px 40px;
+    gap: 20px;
+  }
+
   .crown {
     font-size: 22px;
   }
 
   .name {
     font-size: 21px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  /* 통계(연승/승리/라운드): 좁은 폭에서도 세 칸이 한 줄에 유지되도록 최소폭을 낮춘다. */
+  .stat {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 10px 6px;
+  }
+
+  .statValue {
+    font-size: 22px;
+  }
+
+  /* 다시 시작 버튼: 좁은 화면에서 세로로 쌓아 터치 영역을 넓게 확보한다. */
+  .actions {
+    flex-direction: column;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  /* 무대: 좁은 화면에서 높이를 줄인다. */
+  .stage3d {
+    min-height: 460px;
+  }
+
+  /* 부채꼴 배경 카드: 좁은 화면에서 작게, 간격을 좁혀 화면을 벗어나지 않게 한다. */
+  .backdropCard {
+    width: 130px;
+    height: 190px;
+    transform: translate(-50%, -50%)
+      translateX(calc(var(--slot) * 66px))
+      translateY(calc(var(--abs) * 6px))
+      scale(calc(1 - var(--abs) * 0.08));
+  }
+
+  .backdrop:hover .backdropCard {
+    transform: translate(-50%, -50%)
+      translateX(calc(var(--slot) * 74px))
+      translateY(calc(var(--abs) * 3px))
+      scale(calc(1 - var(--abs) * 0.07));
+  }
+
+  .winnerLayer {
+    max-width: 300px;
+  }
+
+  /* 3D 캐러셀: 좁은 화면에서 원근을 조정하고, 카드 고정 높이에 맞춰 뷰포트 높이를 잡는다. */
+  .carouselViewport {
+    height: clamp(480px, 70vh, 620px);
+    perspective: 1000px;
+  }
+
+  .carouselItem {
+    width: min(320px, 88%);
+    transform: translate(-50%, -50%)
+      translateX(calc(var(--offset) * 70%))
+      translateZ(calc(var(--abs) * -180px))
+      rotateY(calc(var(--offset) * 26deg));
   }
 }

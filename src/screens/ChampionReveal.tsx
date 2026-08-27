@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { Restaurant } from '../types';
 import Spotlight from '../components/Spotlight';
 import PhotoWithFallback from '../components/PhotoWithFallback';
+import { playSound } from '../lib/sound';
 import styles from './ChampionReveal.module.css';
 
 interface ChampionRevealProps {
@@ -52,8 +53,9 @@ function ChampionReveal({ winner, onRevealComplete }: ChampionRevealProps) {
   onRevealCompleteRef.current = onRevealComplete;
 
   useEffect(() => {
-    // 모션 최소화 선호 시 즉시 완료 처리.
+    // 모션 최소화 선호 시 즉시 완료 처리. 우승 "두둥" 효과음은 즉시 재생한다.
     if (reduced) {
+      playSound('final');
       setStage('done');
       const t = window.setTimeout(() => {
         onRevealCompleteRef.current?.();
@@ -63,7 +65,13 @@ function ChampionReveal({ winner, onRevealComplete }: ChampionRevealProps) {
 
     setStage('dim');
     const timers: number[] = [];
-    timers.push(window.setTimeout(() => setStage('spot'), STAGE_DELAYS.spot));
+    // 스포트라이트가 켜지는 순간(spot)에 맞춰 최종 우승 "두둥" 효과음을 재생한다.
+    timers.push(
+      window.setTimeout(() => {
+        setStage('spot');
+        playSound('final');
+      }, STAGE_DELAYS.spot),
+    );
     timers.push(window.setTimeout(() => setStage('title'), STAGE_DELAYS.title));
     timers.push(
       window.setTimeout(() => {

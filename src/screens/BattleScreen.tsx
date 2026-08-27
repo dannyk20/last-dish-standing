@@ -3,6 +3,7 @@ import type { Restaurant } from '../types';
 import RestaurantCard from '../components/RestaurantCard';
 import VersusIndicator from '../components/VersusIndicator';
 import RoundIndicator from '../components/RoundIndicator';
+import { playSound } from '../lib/sound';
 import styles from './BattleScreen.module.css';
 
 interface BattleScreenProps {
@@ -69,6 +70,12 @@ function BattleScreen({
   const handlePick = (id: string) => {
     // 중복 클릭 가드: 이미 선택했으면 무시한다.
     if (selectedId !== null) return;
+
+    // 효과음: 클릭(선택) 즉시 일반 선택음을 재생한다(하이라이트 연출을 기다리지 않는다).
+    // 마지막 라운드 선택이라도 여기서는 일반 선택음을 내고, 최종 우승 "두둥"은
+    // 우승자 발표(ChampionReveal) 등장 시점에 재생한다.
+    playSound('select');
+
     setSelectedId(id);
 
     // 하이라이트 연출을 잠시 보여준 뒤 상위로 선택을 전달한다.

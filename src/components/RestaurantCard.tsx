@@ -11,6 +11,8 @@ interface RestaurantCardProps {
   restaurant: Restaurant;
   showRating: boolean;
   spotlight?: SpotlightState;
+  /** 사진 하단 썸네일 미리보기 표시 여부(기본 true). false면 내부 슬라이드만 남긴다. */
+  showPhotoThumbnails?: boolean;
 }
 
 /**
@@ -30,6 +32,7 @@ function RestaurantCard({
   restaurant,
   showRating,
   spotlight = 'neutral',
+  showPhotoThumbnails = true,
 }: RestaurantCardProps) {
   const {
     name,
@@ -58,6 +61,7 @@ function RestaurantCard({
             photoUrl={photoUrl}
             photoUrls={photoUrls}
             alt={`${name} 대표 이미지`}
+            showThumbnails={showPhotoThumbnails}
           />
         </div>
 

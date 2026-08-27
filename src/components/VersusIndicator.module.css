@@ -21,3 +21,16 @@
   color: var(--color-red);
   line-height: 1;
 }
+
+/* 좁은 모바일(세로 배치): VS 원을 살짝 줄여 두 카드 사이에서 과해 보이지 않게 한다. */
+@media (max-width: 480px) {
+  .root {
+    width: 44px;
+    height: 44px;
+    box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.15);
+  }
+
+  .text {
+    font-size: 17px;
+  }
+}

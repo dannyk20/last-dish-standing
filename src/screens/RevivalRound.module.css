@@ -127,3 +127,16 @@
   outline: 2px solid var(--color-gold);
   outline-offset: 2px;
 }
+
+/* 좁은 모바일(<=480px): 다른 화면과 일관되게 여백을 조밀화하고 건너뛰기 버튼을
+ * 전체 폭으로 넓혀 터치 영역을 확보한다. */
+@media (max-width: 480px) {
+  .root {
+    padding: 20px 14px 36px;
+    gap: 20px;
+  }
+
+  .skipButton {
+    width: 100%;
+  }
+}

@@ -54,14 +54,23 @@ function StartScreen({ onStart, disabled = false }: StartScreenProps) {
   return (
     <main className={styles.root}>
       <header className={styles.header}>
+        {/* 무대 조명 글로우: 로고 뒤에서 은은하게 퍼지는 배경 연출 */}
+        <div className={styles.spotlightGlow} aria-hidden="true" />
+
         <img
           className={styles.logo}
           src={logoUrl}
           alt="LAST DISH STANDING 로고"
         />
+
         {/* 로고가 타이틀 역할을 하므로 흰 글씨 텍스트 타이틀은 두지 않는다.
-            로고 아래에 태그라인만 표시한다. */}
-        <h1 className={styles.eyebrow}>Only one restaurant survives.</h1>
+            태그라인을 양옆 구분선으로 감싸 무대 라벨처럼 강조한다. */}
+        <h1 className={styles.tagline}>
+          <span className={styles.taglineRule} aria-hidden="true" />
+          <span className={styles.taglineText}>Only one restaurant survives.</span>
+          <span className={styles.taglineRule} aria-hidden="true" />
+        </h1>
+
         <p className={styles.subtitle}>
           지역과 음식 종류를 골라 서바이벌을 시작하세요.
         </p>

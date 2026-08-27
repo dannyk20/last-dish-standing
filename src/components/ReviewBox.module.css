@@ -9,6 +9,10 @@
   border-radius: var(--radius-sm);
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
+  /* 부모(.review)가 고정 높이를 주면 그 높이를 채운다. */
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
 }
 
 .text {
@@ -17,10 +21,11 @@
   line-height: 1.5;
   color: var(--color-text-primary);
   /*
-   * 긴 리뷰가 카드 높이를 무한정 늘리지 않도록 고정 높이 영역을 두고
-   * 넘치면 내부에서만 스크롤한다(다음 버튼이 화면 밖으로 밀리지 않게).
+   * 카드 고정 높이 안에서 남는 세로 공간을 채우고, 리뷰가 길면 이 영역 안에서만
+   * 스크롤한다(다음/건너뛰기 버튼이 화면 밖으로 밀리지 않게).
    */
-  max-height: 7.5em; /* 약 5줄 */
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
   /* iOS 관성 스크롤 및 스크롤 시 여백 */
   -webkit-overflow-scrolling: touch;
@@ -50,6 +55,12 @@
 }
 
 .empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
   padding: 12px 14px;
   border-radius: var(--radius-sm);
   background-color: var(--color-surface);

@@ -3,6 +3,14 @@
  * 별명·사진·식당명·카테고리·지역·가격대·한 줄 소개·대표 리뷰 표시.
  * 평점 영역은 showRating=true일 때만 조건부 렌더링된다(TSX에서 처리).
  */
+/*
+ * 카드 높이를 "가장 긴 카드" 기준으로 통일한다.
+ * 모든 사용처(BATTLE 2장, 패자부활전 최대 3장, 우승 화면 후면 캐러셀)에서 동일한
+ * 고정 높이를 갖도록 하여, 정보량이 달라도 카드가 같은 크기로 보이고 다음/건너뛰기
+ * 버튼이 스크롤 없이 보이도록 한다(높이를 화면 높이 기반 clamp 로 제한).
+ * 내부는 flex 로 구성하여 사진은 고정, 남는 공간을 본문이 채우고, 리뷰가 넘치면
+ * 리뷰 영역 안에서만 스크롤한다.
+ */
 .card {
   display: flex;
   flex-direction: column;
@@ -11,9 +19,12 @@
   border-radius: var(--radius-md);
   background-color: var(--color-card);
   border: 1px solid var(--color-border);
+  box-sizing: border-box;
+  height: clamp(500px, 68vh, 660px);
 }
 
 .survivalTitle {
+  flex: 0 0 auto;
   margin: 0;
   font-size: 13px;
   font-weight: 800;
@@ -22,24 +33,39 @@
   color: var(--color-gold);
 }
 
+/* 사진: 고정 높이(카드 높이에 비례). 카드 전체 고정 높이 안에서 축소되지 않는다. */
 .photo {
+  flex: 0 0 auto;
   width: 100%;
+  height: clamp(180px, 28vh, 260px);
   border-radius: var(--radius-sm);
   overflow: hidden;
 }
 
+/* 본문: 남는 공간을 모두 차지하고, 넘치는 내용(리뷰)은 내부에서 흡수한다. */
 .body {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .name {
+  flex: 0 0 auto;
   margin: 0;
   font-size: 20px;
   font-weight: 700;
   line-height: 1.3;
   color: var(--color-text-primary);
+}
+
+/* 본문 내 리뷰를 제외한 요소들은 고정(축소 방지). 리뷰만 남는 공간을 차지한다. */
+.meta,
+.price,
+.summary,
+.rating {
+  flex: 0 0 auto;
 }
 
 .meta {
@@ -72,9 +98,14 @@
   color: var(--color-text-primary);
 }
 
+/* 리뷰 영역: 본문에서 남는 세로 공간을 차지하고, 내용이 넘치면 내부에서 스크롤한다.
+ * 이로써 정보량이 많은 카드도 고정 높이를 유지하고 버튼이 밀리지 않는다. */
 .review {
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .rating {
@@ -103,4 +134,31 @@
 .ratingNone {
   font-size: 13px;
   color: var(--color-text-secondary);
+}
+
+/* 좁은 모바일(<=480px): 카드 내부 여백·폰트를 조밀하게 하여 세로 배치에서
+ * 두 카드가 한 화면에 더 잘 들어오게 한다. PC(720px+)에는 영향을 주지 않는다. */
+@media (max-width: 480px) {
+  .card {
+    gap: 10px;
+    padding: 12px;
+    /* 좁은 화면(세로 배치)에서는 카드 고정 높이를 낮춰 두 카드+버튼이 잘 담기게 한다. */
+    height: clamp(420px, 62vh, 560px);
+  }
+
+  .photo {
+    height: clamp(150px, 24vh, 220px);
+  }
+
+  .body {
+    gap: 8px;
+  }
+
+  .name {
+    font-size: 18px;
+  }
+
+  .summary {
+    font-size: 13px;
+  }
 }
