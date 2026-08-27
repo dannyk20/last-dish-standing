@@ -54,9 +54,6 @@ function StartScreen({ onStart, disabled = false }: StartScreenProps) {
   return (
     <main className={styles.root}>
       <header className={styles.header}>
-        {/* 무대 조명 글로우: 로고 뒤에서 은은하게 퍼지는 배경 연출 */}
-        <div className={styles.spotlightGlow} aria-hidden="true" />
-
         <img
           className={styles.logo}
           src={logoUrl}

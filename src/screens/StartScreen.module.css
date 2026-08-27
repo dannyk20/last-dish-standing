@@ -24,27 +24,6 @@
   padding: 8px 0 4px;
 }
 
-/* 무대 조명 글로우: 로고 뒤에서 골드빛이 위에서 아래로 은은하게 퍼진다.
- * 2D radial-gradient 만 사용하며 콘텐츠 뒤(z-index 0)에 깔린다. */
-.spotlightGlow {
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(680px, 120%);
-  height: 320px;
-  z-index: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    ellipse 60% 60% at 50% 30%,
-    rgba(245, 184, 46, 0.22) 0%,
-    rgba(245, 184, 46, 0.08) 38%,
-    rgba(245, 184, 46, 0) 70%
-  );
-  filter: blur(4px);
-  animation: glow-breathe 5200ms ease-in-out infinite;
-}
-
 .logo {
   position: relative;
   z-index: 1;
@@ -111,22 +90,6 @@
     rgba(245, 184, 46, 0),
     rgba(245, 184, 46, 0.6)
   );
-}
-
-@keyframes glow-breathe {
-  0%,
-  100% {
-    opacity: 0.85;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .spotlightGlow {
-    animation: none;
-  }
 }
 
 .subtitle {
