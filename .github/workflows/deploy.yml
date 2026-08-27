@@ -28,7 +28,12 @@ jobs:
 
       - name: Run tests
         run: npx vitest run
-        
+      
+      - name: Build
+        run: npm run build
+        env:
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
+
       - name: Verify built API key
         run: |
           if grep -R "${VITE_GOOGLE_MAPS_API_KEY}" dist > /dev/null; then
@@ -39,16 +44,6 @@ jobs:
           fi
         env:
           VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
-      
-      - name: Build
-        run: npm run build
-        env:
-          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
-
-      - name: Build
-        run: npm run build
-        env:
-          VITE_GOOGLE_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
           
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
